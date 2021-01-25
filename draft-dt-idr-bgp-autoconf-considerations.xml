@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
 <!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery">
-<!ENTITY L3DL SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl">
+<!ENTITY L3DL SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl.xml">
+<!ENTITY L3DL-ULPC SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl-ulpc.xml">
 <!ENTITY AUTO-SESSION SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.raszuk-idr-bgp-auto-session-setup">
-<!ENTITY XU-AUTODISCOVERY SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.xu-idr-neighbor-autodiscovery">
-<!ENTITY L3DL-SIGNING SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ymbk-lsvr-l3dl-signing">
+<!ENTITY XU-AUTODISCOVERY SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.xu-idr-neighbor-autodiscovery.xml">
+<!ENTITY LSOE SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-lsoe.xml">
+<!ENTITY L3DL-SIGNING SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl-signing.xml">
 ]>
 <?rfc comments="yes"?>
 <?rfc compact="yes"?>
@@ -296,10 +299,9 @@ which need layer 3 discovery and characterization </t>
 <t>
    There are two available candidates for peer discovery at Layer-2, one
    is based on Link Layer Discovery Protocol (LLDP), the other one is
-   based on Layer 3 Discovery Protocol, L3DL [I-D.ietf-lsvr-l3dl].
+   based on Layer 3 Discovery Protocol, L3DL <xref target="I-D.ietf-lsvr-l3dl"/>.
 </t>
 
-</section>
 <section title="LLDP based Approach">
 <t>
    LLDP is a widely deployed protocol with implementations in most
@@ -310,7 +312,7 @@ which need layer 3 discovery and characterization </t>
 </t>
 
 <t>
-   [I-D.acee-idr-lldp-peer-discovery] describes how to use the LLDP IETF
+   <xref target="I-D.acee-idr-lldp-peer-discovery"/> describes how to use the LLDP IETF
    Organizationally Specific TLV to augment the LLDP TLV set to exchange
    BGP Config Sub-TLVs signaling:
 <list style="symbols">
@@ -354,7 +356,7 @@ Local Address (as BGP Next Hop).
 
 <section title="L3DL based Approach">
 <t>
-   L3DL [I-D.ietf-lsvr-l3dl] is an ongoing development in the IETF LSVR
+   L3DL <xref target="I-D.ietf-lsvr-l3dl"/> is an ongoing development in the IETF LSVR
    Working Group with the goals of discovering IP Layer-3 attributes of
    links, such as neighbor IP addressing, logical link IP encapsulation
    abilities, and link liveness which may then be disseminated for the
@@ -362,7 +364,7 @@ Local Address (as BGP Next Hop).
 </t>
 
 <t>
-   L3DL Upper Layer Protocol Configuration, [I-D.ymbk-lsvr-l3dl-ulpc],
+   L3DL Upper Layer Protocol Configuration, <xref target="I-D.ietf-lsvr-l3dl-ulpc"/>,
    details signaling the minimal set of parameters needed to start a BGP
    session with a discovered peer.  Details such as loopback peering are
    handled by attributes in the L3DL protocol itself.  The information
@@ -385,13 +387,13 @@ BGP Authentication.
 
 <t>
    L3DL and L3DL-ULPC have well-specified security mechanisms, see
-   [I-D.ymbk-lsvr-l3dl-signing].
+   <xref target="I-D.ietf-lsvr-l3dl-signing"/>.
 </t>
 
 <t>
    The functionality of L3DL-ULPC is similar but not quite the same as
    the needs of IDR Design Team.  E.g., L3DL is designed to meet more
-   complex needs.  L3DL's predecessor, LSOE [I-D.ymbk-lsvr-lsoe], was
+   complex needs.  L3DL's predecessor, LSOE <xref target="I-D.ietf-lsvr-lsoe"/>, was
    simpler and might be a better candidate for adaptation.  If needed
    the design of LSOE may be customized for the needs of BGP peer auto-
    disovery.
@@ -401,6 +403,7 @@ BGP Authentication.
    Unlike LLDP, L3DL has only one implementation, and LSOE has only one
    open source implementation, and neither is significantly deployed.
 </t>
+</section>
 </section>
 </section>
 
@@ -438,7 +441,7 @@ BGP Authentication.
 
 <section title="New BGP Hello Message based Approach">
 <t>
-   [I-D.xu-idr-neighbor-autodiscovery] describes a BGP neighbor
+   <xref target="I-D.xu-idr-neighbor-autodiscovery"/> describes a BGP neighbor
    discovery mechanism which is based on a newly defined UDP based BGP
    Hello message.  The BGP Hello message is sent in multicast to
    discover the directly connected BGP peers.  According to the message
@@ -485,7 +488,7 @@ BGP Authentication
 </section>
 <section title="BGP OPEN Message based Approach">
 <t>
-   [I-D.raszuk-idr-bgp-auto-session-setup] describes a BGP neighbor
+   <xref target="I-D.raszuk-idr-bgp-auto-session-setup"/> describes a BGP neighbor
    discovery mechanism by reusing BGP OPEN message format with newly
    defined UDP port.  The message is called BGP Session Explorer (BSE)
    packet and is sent in multicast.  Since the message format is the
@@ -510,7 +513,7 @@ Peering address
 <section title="Discovery at Layer Seven">
 <t>
    Peer discovery at Layer-7 requires application layer rendezvous
-   mechanisms analogous to those used by LISP, [RFC6830] or the Bitcoin
+   mechanisms analogous to those used by LISP, <xref target="RFC6830"/> or the Bitcoin
    Protocol.
 </t>
 
@@ -570,6 +573,9 @@ Peering address
 &AUTO-SESSION;
 &XU-AUTODISCOVERY;
 &L3DL-SIGNING;
+&L3DL-ULPC;
+&LSOE;
+&RFC6830;
 	</references>
     </back>
 </rfc>
