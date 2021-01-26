@@ -49,6 +49,32 @@
                 <email>jie.dong@huawei.com</email>
             </address>
         </author>
+        <author role="editor" fullname="Jeffrey Haas" initials="J." surname="Haas">
+            <organization>Juniper Networks</organization>
+            <address>
+                <postal>
+                    <street>1133 Innovation Way</street>
+                    <city>Sunnyvale</city>
+                    <region>CA</region>
+                    <code>94089</code>
+                    <country>US</country>
+                </postal>
+                <email>jhaas@juniper.net</email>
+            </address>
+        </author>
+        <author role="editor" fullname="Warren Kumari" initials="W." surname="Kumari">
+            <organization>Google</organization>
+            <address>
+                <postal>
+                    <street>1600 Amphitheatre Parkway</street>
+                    <city>Mountain View</city>
+                    <region>CA</region>
+                    <code>94043</code>
+                    <country>US</country>
+                </postal>
+                <email>warren@kumari.net</email>
+            </address>
+        </author>
         <date month="January" year="2021" />
         <abstract>
             <t>This draft is an exploration of the requirements, the
