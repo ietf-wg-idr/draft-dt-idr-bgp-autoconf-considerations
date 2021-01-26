@@ -194,7 +194,7 @@
                     limitation of single PDU size. There is an early LLDPv2
                     development to extend this in IEEE.</t>
                     <t>
-                    <xref target="I-D.acee-idr-lldp-peer-discovery" />describes
+                    <xref target="I-D.acee-idr-lldp-peer-discovery" /> describes
                     how to use the LLDP IETF Organizationally Specific TLV to
                     augment the LLDP TLV set to exchange BGP Config Sub-TLVs
                     signaling: 
@@ -213,7 +213,7 @@
                 </section>
                 <section title="L3DL based Approach">
                     <t>L3DL 
-                    <xref target="I-D.ietf-lsvr-l3dl" />is an ongoing
+                    <xref target="I-D.ietf-lsvr-l3dl" /> is an ongoing
                     development in the IETF LSVR Working Group with the goals
                     of discovering IP Layer-3 attributes of links, such as
                     neighbor IP addressing, logical link IP encapsulation
@@ -251,10 +251,10 @@
         <section title="BGP peer Discovery at Layer Three">
             <t>Discovery at Layer-3 can assume IP addressability, though the IP
             addresses of potential peers are not known a priori and need to be
-            discovered before further negotiation.IP multicast may be a good
+            discovered before further negotiation. IP multicast may be a good
             choice to address the above concern.</t>
             <t>The possible problem would appear to discovery at Layer-3 is
-            that one may not know whether to use IPv4 or IPv6. This might be
+            that one may not know whether to use IPv4 or IPv6.  This might be
             exacerbated by the possibility of a potential peer not being on the
             local subnet, and hence broadcast and similar techniques may not be
             applicable. While in data center network or networks in a single
@@ -271,7 +271,7 @@
             message format for peer auto-discovery.</t>
             <section title="New BGP Hello Message based Approach">
                 <t>
-                <xref target="I-D.xu-idr-neighbor-autodiscovery" />describes a
+                <xref target="I-D.xu-idr-neighbor-autodiscovery" /> describes a
                 BGP neighbor discovery mechanism which is based on a newly
                 defined UDP based BGP Hello message. The BGP Hello message is
                 sent in multicast to discover the directly connected BGP peers.
@@ -291,7 +291,7 @@
             </section>
             <section title="BGP OPEN Message based Approach">
                 <t>
-                <xref target="I-D.raszuk-idr-bgp-auto-session-setup" />describes
+                <xref target="I-D.raszuk-idr-bgp-auto-session-setup" /> describes
                 a BGP neighbor discovery mechanism by reusing BGP OPEN message
                 format with newly defined UDP port. The message is called BGP
                 Session Explorer (BSE) packet and is sent in multicast. Since
@@ -306,7 +306,7 @@
             <section title="Discovery at Layer Seven">
                 <t>Peer discovery at Layer-7 requires application layer
                 rendezvous mechanisms analogous to those used by LISP, 
-                <xref target="RFC6830" />or the Bitcoin Protocol.</t>
+                <xref target="RFC6830" /> or the Bitcoin Protocol.</t>
                 <t>If the infrastructure is at all complex, e.g. multi-segment
                 or worse, then it will need prior routing/forwarding knowledge
                 in order to reach the rendezvous. In a BGP centric deployment
