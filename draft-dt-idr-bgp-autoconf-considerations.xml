@@ -134,7 +134,7 @@
 			code points, the expectation is that roles will in many
 			cases be user-defined.</t>
 			<t>Once this information has been learned, a BGP Speaker
-			has the necessary information to determine if wishes to
+			has the necessary information to determine if it wishes to
 			open a BGP session with the discovered BGP Speaker.</t>
 			<t>The existing BGP finite-state machine (FSM) will then
 			be leveraged to do all further work.</t>
@@ -157,14 +157,14 @@
 	acceptable peer requirements on the other side. -->
             <t>With BGP auto-discovery, some configuration of BGP is still
             needed. Operator configuration should be able to decide at least
-            the following: 
+            the following:
             <list style="symbols">
                 <t>Select or otherwise filter which peers to actually try to
                 send BGP OPEN message.</t>
-                <t>Decide the parameters to use, for example: 
+                <t>Decide the parameters to use, for example:
                 <list style="symbols">
                     <t>IP addressing: IPv4 or IPv6</t>
-                    <t>Interface for peerig: Loopback, or Direct</t>
+                    <t>Interface for peering: Loopback, or Direct</t>
                     <t>Any special forwarding or routing needed for reaching
                     the prospective peer, for example, loopback.</t>
                     <t>AS numbering.</t>
@@ -211,26 +211,29 @@
 	    </section>
         </section>
 
-        <section title="Analysis to Candidate Approaches">
+        <section title="Analysis of Candidate Approaches">
             <section title="BGP Peer Discovery at Layer Two">
                 <t>BGP Discovery at Layer-2 would entail finding potential
                 peers on a LAN or on Point-to-Point links, discovering their
                 Layer-3 attributes such as IP addresses, etc.</t>
                 <t>There are two available candidates for peer discovery at
                 Layer-2, one is based on Link Layer Discovery Protocol (LLDP),
-                the other one is based on Layer 3 Discovery Protocol, L3DL 
+                the other one is based on Layer 3 Discovery Protocol, L3DL
                 <xref target="I-D.ietf-lsvr-l3dl" />.</t>
                 <section title="LLDP based Approach">
                     <t>LLDP is a widely deployed protocol with implementations
-                    in most devices in data center. Currently it does not
-                    reveal Layer-3 information such as IP addresses. LLDP has a
-                    limitation of single PDU size. There is an early LLDPv2
-                    development to extend this in IEEE.</t>
+                    in most devices in data centers. Currently it does not
+                    reveal Layer-3 information such as IP addresses.
+                    <!--WK: Erm, yes it does. Perhaps need more text?-->
+                    LLDP has a limitation that all information must fit in a
+                    single PDU (it does not support fragmentation / a
+                    "session"). There is an early LLDPv2 development effort
+                    to extend this in the IEEE.</t>
                     <t>
                     <xref target="I-D.acee-idr-lldp-peer-discovery" /> describes
                     how to use the LLDP IETF Organizationally Specific TLV to
                     augment the LLDP TLV set to exchange BGP Config Sub-TLVs
-                    signaling: 
+                    signaling:
                     <list style="symbols">
                         <t>AFI</t>
                         <t>IP address (IPv4 or IPv6)</t>
@@ -245,32 +248,32 @@
                     discussed.</t>
                 </section>
                 <section title="L3DL based Approach">
-                    <t>L3DL 
+                    <t>L3DL
                     <xref target="I-D.ietf-lsvr-l3dl" /> is an ongoing
                     development in the IETF LSVR Working Group with the goals
                     of discovering IP Layer-3 attributes of links, such as
                     neighbor IP addressing, logical link IP encapsulation
                     abilities, and link liveness which may then be disseminated
                     for the use of BGP-SPF and similar protocols.</t>
-                    <t>L3DL Upper Layer Protocol Configuration, 
+                    <t>L3DL Upper Layer Protocol Configuration,
                     <xref target="I-D.ietf-lsvr-l3dl-ulpc" />, details
                     signaling the minimal set of parameters needed to start a
                     BGP session with a discovered peer. Details such as
                     loopback peering are handled by attributes in the L3DL
                     protocol itself. The information which can be discovered by
-                    L3DL is 
+                    L3DL is
                     <list style="symbols">
                         <t>AS number</t>
                         <t>Local IP address, IPv4 or IPv6, and</t>
                         <t>BGP Authentication.</t>
                     </list></t>
                     <t>L3DL and L3DL-ULPC have well-specified security
-                    mechanisms, see 
+                    mechanisms, see
                     <xref target="I-D.ietf-lsvr-l3dl-signing" />.</t>
                     <t>The functionality of L3DL-ULPC is similar but not quite
                     the same as the needs of IDR Design Team. E.g., L3DL is
                     designed to meet more complex needs. L3DL's predecessor,
-                    LSOE 
+                    LSOE
                     <xref target="I-D.ietf-lsvr-lsoe" />, was simpler and might
                     be a better candidate for adaptation. If needed the design
                     of LSOE may be customized for the needs of BGP peer auto-
@@ -309,7 +312,7 @@
                 defined UDP based BGP Hello message. The BGP Hello message is
                 sent in multicast to discover the directly connected BGP peers.
                 According to the message header format and the TLVs carried in
-                the message, the information which can be signaled is: 
+                the message, the information which can be signaled is:
                 <list style="symbols">
                     <t>AS number</t>
                     <t>BGP Identifier</t>
@@ -330,7 +333,7 @@
                 format with newly defined UDP port. The message is called BGP
                 Session Explorer (BSE) packet and is sent in multicast. Since
                 the message format is the same as BGP OPEN, the information
-                which can be signaled is: 
+                which can be signaled is:
                 <list style="symbols">
                     <t>AS number</t>
                     <t>BGP Identifier</t>
@@ -355,7 +358,7 @@
 	    </section>
             <section title="Discovery at Layer Seven">
                 <t>Peer discovery at Layer-7 requires application layer
-                rendezvous mechanisms analogous to those used by LISP, 
+                rendezvous mechanisms analogous to those used by LISP,
                 <xref target="RFC6830" /> or the Bitcoin Protocol.</t>
                 <t>If the infrastructure is at all complex, for example, multi-segment
                 or worse, then it will need prior routing/forwarding knowledge
@@ -392,7 +395,7 @@
 	    &XU-AUTODISCOVERY;
 	    &L3DL-SIGNING;
 	    &L3DL-ULPC;
-	    &LSOE; 
+	    &LSOE;
 	    &RFC5082;
 	    &RFC6830;
 	</references>
