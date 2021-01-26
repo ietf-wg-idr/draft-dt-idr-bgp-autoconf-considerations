@@ -265,34 +265,38 @@ Management address
                     development in the IETF LSVR Working Group with the goals
                     of discovering IP Layer-3 attributes of links, such as
                     neighbor IP addressing, logical link IP encapsulation
-                    abilities, and link liveness which may then be disseminated
-                    for the use of BGP-SPF and similar protocols.</t>
+                    abilities, and link liveness, which may then be
+                    disseminated for the use of BGP-SPF and similar
+                    protocols.</t>
                     <t>L3DL Upper Layer Protocol Configuration,
                     <xref target="I-D.ietf-lsvr-l3dl-ulpc" />, details
                     signaling the minimal set of parameters needed to start a
                     BGP session with a discovered peer. Details such as
                     loopback peering are handled by attributes in the L3DL
                     protocol itself. The information which can be discovered by
-                    L3DL is
+                    L3DL include:
                     <list style="symbols">
                         <t>AS number</t>
                         <t>Local IP address, IPv4 or IPv6, and</t>
                         <t>BGP Authentication.</t>
                     </list></t>
-                    <t>L3DL and L3DL-ULPC have well-specified security
+                    <t>L3DL and L3DL-ULPC both have well-specified security
                     mechanisms, see
                     <xref target="I-D.ietf-lsvr-l3dl-signing" />.</t>
-                    <t>The functionality of L3DL-ULPC is similar but not quite
-                    the same as the needs of IDR Design Team. E.g., L3DL is
+                    <t>The functionality of L3DL-ULPC meets many, but not all
+                    of the needs of IDR Design Team. E.g., L3DL is
                     designed to meet more complex needs. L3DL's predecessor,
                     LSOE
                     <xref target="I-D.ietf-lsvr-lsoe" />, was simpler and might
-                    be a better candidate for adaptation. If needed the design
-                    of LSOE may be customized for the needs of BGP peer auto-
-                    disovery.</t>
-                    <t>Unlike LLDP, L3DL has only one implementation, and LSOE
-                    has only one open source implementation, and neither is
-                    significantly deployed.</t>
+                    be a better candidate for adaptation (although we will
+                    need to discuss / consider if this leads to more protocols.
+                    If we can piggyback on L3DL and not have 2 implementations).
+                    If needed the design of LSOE can be customized for the
+                    needs of BGP peer auto-disovery.</t>
+                    <t>Unlike LLDP, L3DL has only one implementation (which is
+                    planned to be open-sourced), and LSOE
+                    has only one open source implementation. Neither L3DL nor
+                    LSOE is currently widely deplyed.</t>
                 </section>
             </section>
         </section>
