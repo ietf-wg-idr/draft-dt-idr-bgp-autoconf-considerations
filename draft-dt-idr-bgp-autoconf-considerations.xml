@@ -265,16 +265,15 @@ Management address
                     development in the IETF LSVR Working Group with the goals
                     of discovering IP Layer-3 attributes of links, such as
                     neighbor IP addressing, logical link IP encapsulation
-                    abilities, and link liveness, which may then be
-                    disseminated for the use of BGP-SPF and similar
-                    protocols.</t>
+                    abilities, and link liveness which may then be disseminated
+                    for the use of BGP-SPF and similar protocols.</t>
                     <t>L3DL Upper Layer Protocol Configuration,
                     <xref target="I-D.ietf-lsvr-l3dl-ulpc" />, details
                     signaling the minimal set of parameters needed to start a
                     BGP session with a discovered peer. Details such as
                     loopback peering are handled by attributes in the L3DL
                     protocol itself. The information which can be discovered by
-                    L3DL include:
+                    L3DL is:
                     <list style="symbols">
                         <t>AS number</t>
                         <t>Local IP address, IPv4 or IPv6, and</t>
