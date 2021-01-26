@@ -2,11 +2,13 @@
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd"
 [
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC5082 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
 <!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery">
 <!ENTITY L3DL SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl.xml">
 <!ENTITY L3DL-ULPC SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl-ulpc.xml">
-<!ENTITY AUTO-SESSION SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.raszuk-idr-bgp-auto-session-setup">
+<!ENTITY AUTO-SESSION SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.raszuk-idr-bgp-auto-session-setup.xml">
+<!ENTITY RASZUK-AUTODISCOVERY SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.raszuk-idr-bgp-auto-discovery.xml">
 <!ENTITY XU-AUTODISCOVERY SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.xu-idr-neighbor-autodiscovery.xml">
 <!ENTITY LSOE SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-lsoe.xml">
 <!ENTITY L3DL-SIGNING SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl-signing.xml">
@@ -78,98 +80,93 @@
         <date month="January" year="2021" />
         <abstract>
             <t>This draft is an exploration of the requirements, the
-            alternatives and trade-offs in BGP peer auto-discovery at various
+            alternatives, and trade-offs in BGP peer auto-discovery at various
             layers in the stack. It is based on discussions in the IDR WG BGP
             Autoconf Design Team. The current target environment is the
-            datacenter, while it is considered by the design team to not to
-            preclude the work on WAN deployment in the future. This document is
-            not intended to become an RFC.</t>
+	    datacenter.</t>
+	    <t>This document is not intended to become an RFC.</t>
         </abstract>
     </front>
     <middle>
         <section anchor="intro" title="Introduction">
             <t>This draft is an exploration of the requirements, the
-            alternatives and trade-offs in BGP peer auto-discovery at various
+            alternatives, and trade-offs in BGP peer auto-discovery at various
             layers in the stack. It is based on discussions in the IDR WG BGP
             Autoconf Design Team. The current target environment is the
-            datacenter, while it is considered by the design team to not to
-            preclude the analysis of WAN deployment in the future.</t>
+            datacenter.</t>
         </section>
-        <section title="Backgrounds and Requirements">
-            <t>Previous discussion in BGP autoconf design team converged on a
-            number of aspects of the BGP auto-configuration problem.</t>
-            <section title="The Scope">
-                <t>The current target environment has BGP used as the underlay
-                routing protocol in data center network. While it is also
-                considered by the design team to not to preclude the work on
-                WAN in future.</t>
+        <section title="Design Team Determinations">
+            <section title="Problem Scope">
+                <t>The current target environment is BGP as used for the underlay
+		routing protocol in data center networks. Other scenarios may
+		be considered as part of the analysis for this work, but work on
+		those environments will be deferred to other efforts.</t>
             </section>
-            <section title="Assumptions">
+            <section title="Simplicity">
+		<t>The auto-discovery mechanism is designed to be simple.</t>
+		<t>The goal is to select BGP Speakers where a BGP session may be
+		successfully negotiated for a particular purpose.  The
+		auto-discovery mechanism will not replace or conflict with data
+		exchanged by the BGP FSM, including its OPEN message.</t>
+            </section>
+            <section title="BGP Auto-Discovery Protocol State Requirements">
                 <t>
                     <list style="symbols">
-                        <t>BGP OPEN message will do the heavy lifting in BGP
-                        session establishment.</t>
-                        <t>Before BGP OPEN message is sent, there is BGP
-                        auto-discovery and there is choosing peers.</t>
-                        <t>BGP auto-discovery should not do anything that could
-                        be done by BGP OPEN message.</t>
-                        <t>BGP peering could be selective, every BGP speaker
-                        may not want to peer with every other BGP speaker.</t>
-                        <t>BGP speakers does not know the potential peers' IP
-                        addresses and AS number.</t>
-                        <t>After BGP auto-discovery, it would be nice if
-                        another exchange was not needed before BGP OPEN.</t>
+			<t>Support for IPv4 and IPv6 address families, but do
+			not assume that both are available.</t>
+			<t>The ability to use directly attached interface
+			addresses, or the device's Loopback address.  When using
+			the Loopback address, potentially exchange additional
+			information to bootstrap routing to that address.</t>
+			<t>Discovery of BGP transport protocol end-points and
+			key properties such as IP addresses, authentication
+			parameters, layer 3 liveness mechanisms such as
+			BFD, and support for GTSM <xref target="RFC5082"/>.</t>
+			<!-- XXX JMH What about ports? -->
+			<t>Discovery of BGP peer session parameters relevant to
+			peer selection such as Autonomous System (AS) Numbers,
+			BGP Identifiers, supported address
+			families/subsequent-address families (AFI/SAFIs), and
+			device roles.</t>
+			<t>Device roles are the minimal information available
+			for peer selection for a particular application.  While
+			some roles may be standardized to provide consistent
+			code points, the expectation is that roles will in many
+			cases be user-defined.</t>
+			<t>Once this information has been learned, a BGP Speaker
+			has the necessary information to determine if wishes to
+			open a BGP session with the discovered BGP Speaker.</t>
+			<t>The existing BGP finite-state machine (FSM) will then
+			be leveraged to do all further work.</t>
                     </list>
                 </t>
             </section>
-            <section title="Summary of Requirements">
-                <t>The set of requirements that have been agreed by the design
-                team are as follows: 
-                <list style="symbols">
-                    <t>Support IPv4 and IPv6 address families, but do not
-                    assume both are available.</t>
-                    <t>Support discovery of the peering IP addresses for the
-                    BGP session endpoints.</t>
-                    <t>Support using either a device's interface address or one
-                    of its loopback addresses for the BGP session endpoint.</t>
-                    <t>Support discovery of the peers' ASs.</t>
-                    <t>Support discovery of the set of possible peers, and
-                    optionally each one's attributes, which can be a deployment
-                    defined set, e.g.: leaf, spine, ice cream flavor, etc.
-                    These attributes are arbitrary and operator dependent. No
-                    assumptions about this should be made, code points
-                    assigned,, etc.</t>
-                    <t>Support to agree on any BGP session authentication and
-                    parameters.</t>
-                    <t>Support to enable Layer 3 link liveness detection, such
-                    as BFD.</t>
-                </list></t>
-            </section>
-            <section title="Simplicity">
-                <t>The goal is to provide the minimal set of configuration
-                parameters needed by BGP OPEN to successfully start a BGP
-                peering. The goal is specifically not to replace or conflict
-                with data exchanged during BGP OPEN. Multiple sources of truth
-                are a recipe for complexity and hence painful errors.</t>
-                <t>Simplicity is the key. Features not absolutely needed will
-                not be included in the design. While the mechanism also needs
-                some scalability for information which may be proved necessary
-                in the future.</t>
+            <section title="BGP Auto-Discovery Protocol Transport Requirements">
+	    	<t>BGP Auto-Discovery Protocol State may be carried in multiple
+		transport protocols. That transport protocol may be one that is
+		suited for a specific application.</t>
+		<t>Implementations supporting more than one transport protocol
+		for this state must have a mechanism for consistently selecting
+		discovered BGP sessions.  The BGP Identifier, which is carried
+		by the BGP OPEN message, can help detect sessions to the same
+		BGP Speaker carried in multiple transports.</t>
             </section>
         </section>
         <section title="Operator Configuration">
+	<!-- XXX JMH - We have configuration requirements for our side, and
+	acceptable peer requirements on the other side. -->
             <t>With BGP auto-discovery, some configuration of BGP is still
             needed. Operator configuration should be able to decide at least
             the following: 
             <list style="symbols">
                 <t>Select or otherwise filter which peers to actually try to
                 send BGP OPEN message.</t>
-                <t>Decide the parameters to use, e.g.: 
+                <t>Decide the parameters to use, for example: 
                 <list style="symbols">
                     <t>IP addressing: IPv4 or IPv6</t>
                     <t>Interface for peerig: Loopback, or Direct</t>
                     <t>Any special forwarding or routing needed for reaching
-                    the prospective peer, e.g., loopback.</t>
+                    the prospective peer, for example, loopback.</t>
                     <t>AS numbering.</t>
                     <t>BGP Authentication Options.</t>
                 </list></t>
@@ -178,32 +175,42 @@
         <section title="Considerations on Design Principles">
             <t>This section summarizes the considerations of possible criteria
             for the design of BGP auto-discovery mechanism, which may need
-            further discussion in a wider community than the design team (e.g.
-            the IDR WG).</t>
-            <t>The network layer of the discovery mechanism: 
+            further discussion in a wider community than the design team (for
+	    example, the IDR WG).</t>
+
+	    <section title="Transport Considerations">
+		<t>The network layer of the discovery mechanism.  This may
+		impact the scoping of the deployment of the auto-discovery
+		mechanism.
+		    <list style="symbols">
+			<t>Layer 2: For example, based on ethernet.</t>
+			<t>Layer 3: Which is generic for any link-layer protocol.</t>
+			<!-- XXX JMH - multicast considerations? -->
+		    </list>
+	    	</t>
+	    	<t>Potentially leveraging existing protocols deployed in the data
+		center.</t>
+	    	<t>The length of message supported by the protocol.</t>
+		<t>How extensible the protocol is to carry future state for BGP
+		auto-configuration.</t>
+	    </section>
+
+            <section title="Relationship with BGP">
+	    <t>
             <list style="symbols">
-                <t>Layer 2: e.g. based on ethernet</t>
-                <t>Layer 3: which is generic for any link-layer protocol</t>
-            </list></t>
-            <t>Relationship with BGP: 
-            <list style="symbols">
-                <t>Independent from BGP session establishment</t>
+                <t>The auto-discovery mechanism should be independent from BGP
+		session establishment of the discovered session.</t>
                 <t>Not affect on BGP session establishment and routing
                 exchange, other than the interactions for triggering the
-                setup/removal of peer session based on discovery mechanism</t>
-                <t>Make use of existing BGP protocol for automating the BGP
-                session bring-up</t>
+                setup/removal of peer session based on discovery mechanism.</t>
+		<!-- XXX JMH - Here the example of draft-xu dropping sessions is
+		a discussion point -->
+                <t>Potentially leveraging existing BGP protocol sessions for
+		discovery of new BGP sessions.</t>
             </list></t>
-            <t>Other criteria: 
-            <list style="symbols">
-                <t>Make use of a currently implemented and deployed protocol in
-                data center.</t>
-                <t>Widely applicable to a range of routing and similar
-                protocols which need layer 3 discovery and characterization</t>
-                <t>Length of the message size supported</t>
-                <t>Extensibility</t>
-            </list></t>
+	    </section>
         </section>
+
         <section title="Analysis to Candidate Approaches">
             <section title="BGP Peer Discovery at Layer Two">
                 <t>BGP Discovery at Layer-2 would entail finding potential
@@ -317,6 +324,7 @@
             </section>
             <section title="BGP OPEN Message based Approach">
                 <t>
+		<!-- XXX JMH - draft raszuk auto-discovery covered by patent -->
                 <xref target="I-D.raszuk-idr-bgp-auto-session-setup" /> describes
                 a BGP neighbor discovery mechanism by reusing BGP OPEN message
                 format with newly defined UDP port. The message is called BGP
@@ -329,11 +337,27 @@
                     <t>Peering address</t>
                 </list></t>
             </section>
+	    <section title="Bootstrapping BGP via BGP">
+		<t>
+		<xref target="I-D.raszuk-idr-bgp-auto-discovery"/> describes a
+		new BGP address family.  The NLRI carries a Group ID + BGP
+		Identifier as the key.  A new BGP Path Attribute carries
+		information about the sessions:
+		<list style="symbols">
+		    <t>AS Number</t>
+		    <t>AFI/SAFI</t>
+		    <t>BGP Identifier</t>
+		    <t>Peer Transport Address</t>
+		    <t>Flags to declare a session for information only, to force
+		    a reset of a session on parameter changes, etc.</t>
+		</list>
+		</t>
+	    </section>
             <section title="Discovery at Layer Seven">
                 <t>Peer discovery at Layer-7 requires application layer
                 rendezvous mechanisms analogous to those used by LISP, 
                 <xref target="RFC6830" /> or the Bitcoin Protocol.</t>
-                <t>If the infrastructure is at all complex, e.g. multi-segment
+                <t>If the infrastructure is at all complex, for example, multi-segment
                 or worse, then it will need prior routing/forwarding knowledge
                 in order to reach the rendezvous. In a BGP centric deployment
                 this could pose a chicken and egg problem.</t>
@@ -364,10 +388,12 @@
 	    &LLDP;
 	    &L3DL;
 	    &AUTO-SESSION;
+	    &RASZUK-AUTODISCOVERY;
 	    &XU-AUTODISCOVERY;
 	    &L3DL-SIGNING;
 	    &L3DL-ULPC;
 	    &LSOE; 
+	    &RFC5082;
 	    &RFC6830;
 	</references>
     </back>
