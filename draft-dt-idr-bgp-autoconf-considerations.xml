@@ -77,7 +77,7 @@
                 <email>warren@kumari.net</email>
             </address>
         </author>
-        <date month="January" year="2021" />
+        <date month="February" year="2021" />
         <abstract>
             <t>This draft is an exploration of the requirements, the
             alternatives, and trade-offs in BGP peer auto-discovery at various
