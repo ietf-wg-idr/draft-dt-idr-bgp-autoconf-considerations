@@ -122,7 +122,7 @@
 			key properties such as IP addresses, authentication
 			parameters, layer 3 liveness mechanisms such as
 			BFD, and support for GTSM <xref target="RFC5082"/>.</t>
-			<!-- XXX JMH What about ports? -->
+			<!-- XXX JMH What about ports? --> <!-- XXX WK: No. :-P -->
 			<t>Discovery of BGP peer session parameters relevant to
 			peer selection such as Autonomous System (AS) Numbers,
 			BGP Identifiers, supported address
@@ -132,7 +132,9 @@
 			for peer selection for a particular application.  While
 			some roles may be standardized to provide consistent
 			code points, the expectation is that roles will in many
-			cases be user-defined.</t>
+			cases be user-defined. Examples of roles may include things like:
+            "I'm at Layer (stage) 3 in the Clos fabric", "I'm a fabric egress
+            node", etc.</t>
 			<t>Once this information has been learned, a BGP Speaker
 			has the necessary information to determine if it wishes to
 			open a BGP session with the discovered BGP Speaker.</t>
@@ -140,11 +142,9 @@
 			be leveraged to do all further work.</t>
                     </list>
                 </t>
-            </section>
             <section title="BGP Auto-Discovery Protocol Transport Requirements">
 	    	<t>BGP Auto-Discovery Protocol State may be carried in multiple
-		transport protocols. That transport protocol may be one that is
-		suited for a specific application.</t>
+		transport protocols.</t>
 		<t>Implementations supporting more than one transport protocol
 		for this state must have a mechanism for consistently selecting
 		discovered BGP sessions.  The BGP Identifier, which is carried
@@ -171,6 +171,12 @@
                     <t>BGP Authentication Options.</t>
                 </list></t>
             </list></t>
+            <t>In addition to actually forming the BGP sessions, a common
+            deplyoment model may also the so called "validation" model. In this
+            model, the operator configures the BGP sessions manually, and uses
+            the information collected/populated by the BGP Autoconf mechanism
+            to validate that the sessions are correct.</t>
+            </section>
         </section>
         <section title="Considerations on Design Principles">
             <t>This section summarizes the considerations of possible criteria
@@ -183,7 +189,7 @@
 		impact the scoping of the deployment of the auto-discovery
 		mechanism.
 		    <list style="symbols">
-			<t>Layer 2: For example, based on ethernet.</t>
+			<t>Layer 2: For example, based on Ethernet.</t>
 			<t>Layer 3: Which is generic for any link-layer protocol.</t>
 			<!-- XXX JMH - multicast considerations? -->
 		    </list>
