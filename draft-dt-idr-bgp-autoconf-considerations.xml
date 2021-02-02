@@ -10,6 +10,7 @@
 <!ENTITY RFC5925 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
 <!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery">
+<!ENTITY BGP-OSPF SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-ospf-bgp-rr.xml">
 <!ENTITY L3DL SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl.xml">
 <!ENTITY L3DL-ULPC SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl-ulpc.xml">
 <!ENTITY AUTO-SESSION SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.raszuk-idr-bgp-auto-session-setup.xml">
@@ -267,8 +268,6 @@ Management address
                         <t>Key Chain</t>
                         <t>Local Address (as BGP Next Hop).</t>
                     </list></t>
-                    <t>Which of these are really necessary could be
-                    discussed.</t>
                 </section>
                 <section title="L3DL based Approach">
                     <t>L3DL
@@ -326,7 +325,7 @@ Management address
             viable approach.</t>
             <t>There are two available candidates for BGP peer discovery at
             Layer-3, one is based on extending BGP with new Hello message for
-            peer auto- discovery, the other one is based on reusing BGP OPEN
+            peer auto-discovery, the other one is based on reusing BGP OPEN
             message format for peer auto-discovery.</t>
             <section title="New BGP Hello Message based Approach">
                 <t>
@@ -345,12 +344,14 @@ Management address
                     <t>Link attributes</t>
                     <t>Neighbor state</t>
                     <t>BGP Authentication</t>
-                </list>Which of these are really necessary could be
-                discussed.</t>
+                </list>
+                </t>
+		<t>The mechanisms in this draft do not currently handle fragmentation.</t>
+		<t>The mechanism in this draft is perhaps unique among the other proposals
+		in requiring bi-directional state.</t>
             </section>
             <section title="BGP OPEN Message based Approach">
                 <t>
-		<!-- XXX JMH - draft raszuk auto-discovery covered by patent -->
                 <xref target="I-D.raszuk-idr-bgp-auto-session-setup" /> describes
                 a BGP neighbor discovery mechanism by reusing BGP OPEN message
                 format with newly defined UDP port. The message is called BGP
@@ -362,9 +363,19 @@ Management address
                     <t>BGP Identifier</t>
                     <t>Peering address</t>
                 </list></t>
+		<t>The mechanism is currently under-specified with respect to a number of
+		similar properties described elsewhere.  A general implication is that
+		those properties - and others providing for extensibility of the
+		auto-discovery mechanism - would need to be added to the BGP OPEN message
+		and deal with the related impacts on the BGP session's finite-state
+		machine.</t>
+		<t>BGP PDUs, including the OPEN message, may be up to 4k in size.  Since
+		this mechanism leverages Layer 3 multicast, a PDU fragmentation mechanism
+		may need to be described.</t>
             </section>
 	    <section title="Bootstrapping BGP via BGP">
 		<t>
+		<!-- XXX JMH - draft raszuk auto-discovery covered by patent -->
 		<xref target="I-D.raszuk-idr-bgp-auto-discovery"/> describes a
 		new BGP address family.  The NLRI carries a Group ID + BGP
 		Identifier as the key.  A new BGP Path Attribute carries
@@ -378,6 +389,29 @@ Management address
 		    a reset of a session on parameter changes, etc.</t>
 		</list>
 		</t>
+		<t>Since the BGP auto-discovery state is carried by BGP, it inherits the
+		security implications of the underlying BGP session.</t>
+		<t>PDU size considerations are identical to those of a BGP UPDATE
+		message.</t>
+		<t>Similarly, extensibility considerations would rely on either the new
+		BGP Path Attribute, or one yet to be defined.</t>
+	    </section>
+	    <section title="Bootstrapping BGP via OSPF">
+	        <t><xref target="I-D.acee-ospf-bgp-rr"/> describes a mechanism to learn BGP
+		Route Reflectors via OSPFv2/OSPFv3 LSAs.  Multiple types of scopes are
+		defined for these LSAs to help constrain where they are advertised in an
+		OSPF domain.</t>
+		<t>The BGP Route Reflector TLV contains:
+		<list style="symbols">
+		    <t>Local AS Number</t>
+		    <t>IPv4 or IPv6 Address of the Route Reflector</t>
+		    <t>A list of AFI/SAFIs supported by the Route Reflector</t>
+		</list>
+		</t>
+		<t>The BGP Route Reflector TLV may be advertised more than once,
+		potentially to describe different IP transport endpoints.</t>
+		<t>This mechanism does not provide for security properties of the BGP
+		session or transport properties such as BFD or GTSM.</t>
 	    </section>
             <section title="Discovery at Layer Seven">
                 <t>Peer discovery at Layer-7 requires application layer
@@ -446,14 +480,16 @@ Management address
 
 		    <t>A Layer 3 unicast protocol inherits the properties of the Layer 2
 		    protocol, and is intended to address a specific address - typically
-		    one device.</t>
+		    one device. Layer 3 unicast protocols may leverage GTSM for their
+		    security.</t>
 
 		    <t>A Layer 3 multicast protocol addresses a group of devices in a
 		    given multicast domain.  Such domains may be scoped, such as a single
 		    link's "All-Routers" group or perhaps all devices subscribed to a
 		    specific multicast group in a network.  In many cases, a Layer 3
 		    multicast protocol inherits the properties of the Layer 2 multicast
-		    protocol.</t>
+		    protocol.  Link-local scoped multicast protocols may be able to
+		    leverage GTSM.</t>
 
 		    <t>A Layer 7 protocol is scoped per the mechanism in the underlying
 		    protocol.  IGPs such as OSPF and IS-IS provide an "internal" scoping.
@@ -502,6 +538,7 @@ Management address
 	    &L3DL-SIGNING;
 	    &L3DL-ULPC;
 	    &LSOE;
+	    &BGP-OSPF;
 	    &RFC2385;
 	    &RFC3352;
 	    &RFC4272;
