@@ -221,6 +221,25 @@
 		discovery of new BGP sessions.</t>
             </list></t>
 	    </section>
+
+	    <section title="Session Selection Considerations">
+		<t>Candidate BGP sessions to a given BGP Speaker may be discovered by one
+		or more auto-discovery protocols.  Even for a single protocol, multiple
+		transport session endpoints may be discovered for the same BGP Speaker.
+		These different sessions may be required for supporting different address
+		families such as IPv4/IPv6 depending on the BGP operational practices for
+		that device.  Examples include a distinct and matching session for the
+		IPv4/IPv6 address family, a unified session carrying IPv4 over IPv6 and
+		vice-versa, etc.</t>
+		<t>The BGP Identifier (router-id), a required protocol component of BGP,
+		can serve to identify the same instance of the BGP Speaker.  This is a
+		required element of the information to be carried in the auto-discovery
+		protocol.</t>
+		<t>When multiple mechanisms exist to discovery the same BGP speaker in an
+		implementation, that implementation MUST document the process by which it
+		chooses discovered sessions.  Those implementations also MUST describe
+		interactions with their protocol state machinery for each mechanism.</t>
+	    </section>
         </section>
 
         <section title="Analysis of Candidate Approaches">
