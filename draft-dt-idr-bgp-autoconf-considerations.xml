@@ -2,7 +2,12 @@
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd"
 [
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC2385 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2385.xml">
+<!ENTITY RFC3352 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3352.xml">
+<!ENTITY RFC4272 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4272.xml">
+<!ENTITY RFC4301 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4301.xml">
 <!ENTITY RFC5082 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
+<!ENTITY RFC5925 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
 <!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery">
 <!ENTITY L3DL SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl.xml">
@@ -395,7 +400,90 @@ Management address
             as an RFC.</t>
         </section>
         <section title="Security Considerations">
-            <t>None yet, but there will be many.</t>
+            <t>There are two primary components to be secured in environments
+	    utilizing BGP auto-discovery: The BGP transport layer discovered via the
+	    protocol, and the auto-discovery protocol itself.
+	    </t>
+
+	    <section title="BGP Transport Security Considerations">
+		<t>The purpose of the auto-discovery protocol is to ease the setup of BGP
+		sessions for various applications, including data-center fabrics.
+		However, care must be taken to not permit sessions to be setup outside of
+		trusted environments.  It is RECOMMENDED that sessions advertised using
+		BGP auto-discovery be protected at the transport layer using mechanisms
+		such as TCP-AO <xref target="RFC5925"/>, IPsec <xref target="RFC4301"/>,
+		or the deprecated TCP-MD5 <xref target="RFC2385"/>.</t>
+
+		<t>It is thus a requirement that the auto-discovery protocol carry
+		sufficient information to determine what transport security is to be used
+		when establishing a BGP session.</t>
+
+		<t>All Security Considerations from <xref target="RFC4272"/>, BGP Security
+		Vulnerabilities Analysis, continue to apply.</t>
+	    </section>
+
+	    <section title="Auto-discovery Protocol Considerations">
+		<t>As noted in previous sections, BGP auto-discovery may occur scoped in
+		many portions of the network.  The information present in the
+		auto-discovery protocol is considered sensitive, since it identifies
+		resources running the BGP protocol.  Care should be exercised in avoiding
+		inadvertent disclosure of BGP sessions that are configured to permit
+		auto-configuration even when BGP session transport security is in use.
+		The auto-discovery protocol sets the context for such inadvertent
+		disclosure.</t>
+
+		<section title="Potential Scopes of an Auto-discovery Protocol">
+		    <t>A Layer 2 unicast protocol targets a known device, potentially
+		    discovered through other means.  The targeted device receives the
+		    message.  Depending on the Layer 2 environment, other devices on the
+		    same link may may be able to observe the protocol messages.  Point to
+		    point links may also fall into this category.</t>
+
+		    <t>A Layer 2 multicast protocol targets a group of devices on that
+		    Layer 2 multicast domain.  A set of devices in that domain receives
+		    the message.  Such messages may cross a number of devices in the
+		    domain.  An example of this includes a set of Ethernet switches.</t>
+
+		    <t>A Layer 3 unicast protocol inherits the properties of the Layer 2
+		    protocol, and is intended to address a specific address - typically
+		    one device.</t>
+
+		    <t>A Layer 3 multicast protocol addresses a group of devices in a
+		    given multicast domain.  Such domains may be scoped, such as a single
+		    link's "All-Routers" group or perhaps all devices subscribed to a
+		    specific multicast group in a network.  In many cases, a Layer 3
+		    multicast protocol inherits the properties of the Layer 2 multicast
+		    protocol.</t>
+
+		    <t>A Layer 7 protocol is scoped per the mechanism in the underlying
+		    protocol.  IGPs such as OSPF and IS-IS provide an "internal" scoping.
+		    BGP, depending on the deployment of the underlying address family, may
+		    vary from a targeted advertisement, to Internet-wide.</t>
+
+		    <t>Each of these scopes provide different opportunities for
+		    inadvertent disclosure.  The auto-discovery protocol will need to
+		    address how the desired security properties interact with the protocol
+		    scope.</t>
+		</section>
+
+		<section title="Desired Security Properties of the Auto-discovery Protocols">
+		    <t>Data Integrity is a required property.  The data that is
+		    transmitted by a speaker fo the auto-configuration protocol should be
+		    able to pass among its speakers properly.</t>
+
+		    <t>Peer Entity authentication is a required property for Layer 2 and
+		    Layer 3 implementations.  In a Layer 7 protocol, that protocol may
+		    provide the necessary authentication.</t>
+
+		    <t>Confidentiality is an optional property.  There is a tension
+		    between the desire to provide for a simple auto-configuration protocol
+		    that is easy to diagnose and debug with inadvertent disclosure.</t>
+
+		    <t>The auto-configuration protocol must be resistant to Denial of
+		    Service, and to causing Denial of Service to discovered BGP session
+		    end-points.</t>
+		</section>
+	    </section>
         </section>
         <section title="Acknowledgments">
             <t>The IDR BGP Auto-Conf Design Team.</t>
@@ -414,7 +502,12 @@ Management address
 	    &L3DL-SIGNING;
 	    &L3DL-ULPC;
 	    &LSOE;
+	    &RFC2385;
+	    &RFC3352;
+	    &RFC4272;
+	    &RFC4301;
 	    &RFC5082;
+	    &RFC5925;
 	    &RFC6830;
 	</references>
     </back>
