@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd"
 [
+<!ENTITY RFC0826 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.0826.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC2385 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2385.xml">
 <!ENTITY RFC3352 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3352.xml">
 <!ENTITY RFC4272 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4272.xml">
 <!ENTITY RFC4301 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4301.xml">
+<!ENTITY RFC4861 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4861.xml">
 <!ENTITY RFC5082 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
 <!ENTITY RFC5925 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
@@ -342,10 +344,13 @@ Management address
             also be used. For switched or bridged multi-point which is at least
             on the same subnet, VLAN, etc., multicast or broadcasts might be a
             viable approach.</t>
-            <t>There are two available candidates for BGP peer discovery at
-            Layer-3, one is based on extending BGP with new Hello message for
-            peer auto-discovery, the other one is based on reusing BGP OPEN
-            message format for peer auto-discovery.</t>
+            <t>There are four available candidates for BGP peer discovery at
+            Layer-3: One is based on extending BGP with new Hello message for
+	    peer auto-discovery. One is based on reusing BGP OPEN message format for peer
+	    auto-discovery. One is based on bootstrapping BGP sessions via existing BGP
+	    sessions.  One is based upon bootstraping a BGP Route Reflector via the OSPF
+	    protocol.
+	    </t>
             <section title="New BGP Hello Message based Approach">
                 <t>
                 <xref target="I-D.xu-idr-neighbor-autodiscovery" /> describes a
@@ -446,6 +451,19 @@ Management address
                 will have the classic worries about fragility, redundancy,
                 reliability, etc.</t>
             </section>
+	    <section title="Link-Local Discovery">
+		<t>Some existing BGP auto-configuration mechanisms leverage "point to
+		point" addressing schemes to bootstrap BGP sessions.  One example utilizes
+		an IP subnet numbered such that it may contain only two hosts - for IPv4,
+		a /30 or /31 network; for IPv6 a /127 network.  An additional mechanism
+		may leverage <xref target="RFC0826">IPv4 ARP</xref> or 
+		<xref target="RFC4861">IPv6 Neighbor Discovery</xref> to learn of hosts on
+		a subnet.</t>
+		<t>Such existing mechanisms do not provide an auto-discovery protocol with
+		necessary parameters.  Rather, they simplify configuration by permitting
+		BGP session configuration templates to be easily applied to interfaces
+		without requiring numbering to be known a priori.</t>
+	    </section>
         </section>
         <section title="IANA Considerations">
             <t>This document makes no request of IANA.</t>
@@ -558,10 +576,12 @@ Management address
 	    &L3DL-ULPC;
 	    &LSOE;
 	    &BGP-OSPF;
+	    &RFC0826;
 	    &RFC2385;
 	    &RFC3352;
 	    &RFC4272;
 	    &RFC4301;
+	    &RFC4861;
 	    &RFC5082;
 	    &RFC5925;
 	    &RFC6830;
