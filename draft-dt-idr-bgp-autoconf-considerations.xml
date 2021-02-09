@@ -278,7 +278,7 @@
         which have been configured from the database match what the
         autodiscovered sessions would have created. Over time, if the
         BGP Autoconf solution proves to be successful, reliable and
-        scalabe, operators may begin using it as the primary source of
+        scaleabe, operators may begin using it as the primary source of
         record.</t>
 
         <t>Closely related to these considerations is the "scope" of the
@@ -301,11 +301,11 @@
                 <t>Allow operation in a "validation" or "verification" only
                 mode, where the Autoconf solution populates a database or model
                 showing what sessions it would bring up if allowed.</t>
-                <t>Ideally allow for differnt levels of "granularity" in
+                <t>Ideally allow for different levels of "granularity" in
                 pre-configuration. For example, if the protocol is capable of
                 autoconfiguring everything, it should also support filtering or
                 limiting the session according to configured policy. (Likely an
-                implmentation detail)</t>
+                implementation detail)</t>
                 <t>Support preconfigured authentication systems. This is an
                 area where more discussion is needed! The solution MUST also
                 support a "no authentication" mode, and, for extra credit,
