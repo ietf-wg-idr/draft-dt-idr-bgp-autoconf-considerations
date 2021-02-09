@@ -242,6 +242,50 @@
 		chooses discovered sessions.  Those implementations also MUST describe
 		interactions with their protocol state machinery for each mechanism.</t>
 	    </section>
+
+        <section title="Operational Trust Considerations">
+        <t>Different deployment models will have different trust models and
+        requirements. Some of this will be driven by the size, complxity and
+        operational practices of the operator. For example, some operators have
+        very strict phycial protection of the datacenter, and their
+        deployment model assumes that anything which plugs into devices in the
+        datacenter is, by definition, trusted. Other operators take a very
+        differnt approach, and asume the least amount of trust possible.</t>
+
+        <t>Much of this difference is also reflected in the operator's
+        bootstrapping solution. Some operators build individual configurations
+        for each device, and manually provision the configuration into the
+        non-volatile storage of the device before it is shipped. Other
+        operators use solutions similar to [name] to automatically load an
+        operating system and configuration onto the device, based on a unique
+        device identifier (such as managment Ethernet MAC address). Some
+        operators preconfigure devices with identical base configuraitons
+        containing some bootstrapping policy logic ("If you are a Model-X
+        device, and interface 23 is connected to a device of type Y, then you
+        must be at Stage-2 in a Clos fabric") and allow the device to use this
+        policy information to infer its role and postition. A final set of
+        (usually smaller datacenter operators) would like to be able to simply
+        unpack a new device, plug it in and have the device infer everything
+        (it is unclear if this is a deployment medel that we want to
+        support).</t>
+
+        <t>Many datacenter operators already have a well-developed process for
+        installing and bringing up a new datacenter network, complete with
+        solutions to bootstrap and configure the network. These operators will
+        want to be able to use the BGP Autoconf mechanism to perfom validation
+        of the datacenter fabric, and ongoing "sanity-checking" to confirm
+        that the datacenter is correctly cabled, and that the BGP sessions
+        which have been configured from the database match what the
+        autodiscovered sessions would have created. Over time, if the
+        BGP Autoconf solution proves to be successful, reliable and
+        scalabe, operators may begin using it as the primary source of
+        record.</t>
+
+        <t>It is not clear that the solution that chosen will be able to
+        meet all of the trust and deplyment models, and we will need to
+        prioritize which set(s) of deployment scenarios are the most important
+        for the design team to solve.</t>
+        </section>
         </section>
 
         <section title="Analysis of Candidate Approaches">
@@ -255,22 +299,11 @@
                 <xref target="I-D.ietf-lsvr-l3dl" />.</t>
                 <section title="LLDP based Approach">
                     <t>LLDP is a widely deployed protocol with implementations
-                    in most devices in data centers. Currently it does not
-                    reveal Layer-3 information such as IP addresses.
-                    <!--WK: Erm, yes it does. Perhaps need more text?
-                    Handwave, handwave, standardized format, handwave?
-                    e.g:
-                    show lldp neighbors interface ge-2/1/3
-                    System Description : Juniper Networks, Inc. ex4200-48px Ethernet Switch, kernel JUNOS 15.1R7.9, Build date: 2018-09-11 05:33:40 UTC Copyright (c) 1996-2018 Juniper Networks, Inc.
+                    in most devices in data centers. Currently it only advertises
+                    the managment Layer-3 address, but could presumably be
+                    extended to include the per-interface addresses.</t>
 
-Management address
-        Address Type      : IPv4(1)
-        Address           : 193.151.172.135
-        Interface Number  : 34
-        Interface Subtype : ifIndex(2)
-
-                    -->
-                    LLDP has a limitation that all information must fit in a
+                    <t>LLDP has a limitation that all information must fit in a
                     single PDU (it does not support fragmentation / a
                     "session"). There is an early LLDPv2 development effort
                     to extend this in the IEEE.</t>
@@ -456,7 +489,7 @@ Management address
 		point" addressing schemes to bootstrap BGP sessions.  One example utilizes
 		an IP subnet numbered such that it may contain only two hosts - for IPv4,
 		a /30 or /31 network; for IPv6 a /127 network.  An additional mechanism
-		may leverage <xref target="RFC0826">IPv4 ARP</xref> or 
+		may leverage <xref target="RFC0826">IPv4 ARP</xref> or
 		<xref target="RFC4861">IPv6 Neighbor Discovery</xref> to learn of hosts on
 		a subnet.</t>
 		<t>Such existing mechanisms do not provide an auto-discovery protocol with
