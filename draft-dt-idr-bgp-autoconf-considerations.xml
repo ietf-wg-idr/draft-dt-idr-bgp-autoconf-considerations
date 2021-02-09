@@ -11,7 +11,7 @@
 <!ENTITY RFC5082 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
 <!ENTITY RFC5925 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
-<!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery">
+<!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery.xml">
 <!ENTITY BGP-OSPF SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-ospf-bgp-rr.xml">
 <!ENTITY L3DL SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl.xml">
 <!ENTITY L3DL-ULPC SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl-ulpc.xml">
@@ -85,7 +85,7 @@
                 <email>warren@kumari.net</email>
             </address>
         </author>
-        <date month="February" year="2021" />
+        <date day="9" month="February" year="2021" />
         <abstract>
             <t>This draft is an exploration of the requirements, the
             alternatives, and trade-offs in BGP peer auto-discovery at various
@@ -245,34 +245,34 @@
 
         <section title="Operational Trust Considerations">
         <t>Different deployment models will have different trust models and
-        requirements. Some of this will be driven by the size, complxity and
+        requirements. Some of this will be driven by the size, complexity and
         operational practices of the operator. For example, some operators have
-        very strict phycial protection of the datacenter, and their
+        very strict physical protection of the datacenter, and their
         deployment model assumes that anything which plugs into devices in the
         datacenter is, by definition, trusted. Other operators take a very
-        differnt approach, and asume the least amount of trust possible.</t>
+        different approach, and assume the least amount of trust possible.</t>
 
         <t>Much of this difference is also reflected in the operator's
         bootstrapping solution. Some operators build individual configurations
         for each device, and manually provision the configuration into the
         non-volatile storage of the device before it is shipped. Other
-        operators use solutions similar to [name] to automatically load an
+        operators use solutions similar to PXE Boot to automatically load an
         operating system and configuration onto the device, based on a unique
-        device identifier (such as managment Ethernet MAC address). Some
-        operators preconfigure devices with identical base configuraitons
+        device identifier (such as management Ethernet MAC address). Some
+        operators pre-configure devices with identical base configurations
         containing some bootstrapping policy logic ("If you are a Model-X
         device, and interface 23 is connected to a device of type Y, then you
         must be at Stage-2 in a Clos fabric") and allow the device to use this
-        policy information to infer its role and postition. A final set of
-        (usually smaller datacenter operators) would like to be able to simply
+        policy information to infer its role and position. A final set of
+        datacenter operators would like to be able to simply
         unpack a new device, plug it in and have the device infer everything
-        (it is unclear if this is a deployment medel that we want to
+        (it is unclear if this is a deployment model that we want to
         support).</t>
 
         <t>Many datacenter operators already have a well-developed process for
         installing and bringing up a new datacenter network, complete with
         solutions to bootstrap and configure the network. These operators will
-        want to be able to use the BGP Autoconf mechanism to perfom validation
+        want to be able to use the BGP Autoconf mechanism to perform validation
         of the datacenter fabric, and ongoing "sanity-checking" to confirm
         that the datacenter is correctly cabled, and that the BGP sessions
         which have been configured from the database match what the
@@ -281,8 +281,10 @@
         scalabe, operators may begin using it as the primary source of
         record.</t>
 
+        <t>Closely related to these considerations is the "scope" of the
+        discovery process</t>
         <t>It is not clear that the solution that chosen will be able to
-        meet all of the trust and deplyment models, and we will need to
+        meet all of the trust and deployment models, and we will need to
         prioritize which set(s) of deployment scenarios are the most important
         for the design team to solve.</t>
         </section>
