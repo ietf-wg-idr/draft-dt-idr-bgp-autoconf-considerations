@@ -130,7 +130,7 @@
 			key properties such as IP addresses, authentication
 			parameters, layer 3 liveness mechanisms such as
 			BFD, and support for GTSM <xref target="RFC5082"/>.</t>
-			<!-- XXX JMH What about ports? --> <!-- XXX WK: No. :-P -->
+			<!-- XXX JMH What about ports? -->
 			<t>Discovery of BGP peer session parameters relevant to
 			peer selection such as Autonomous System (AS) Numbers,
 			BGP Identifiers, supported address
@@ -264,7 +264,7 @@
         device, and interface 23 is connected to a device of type Y, then you
         must be at Stage-2 in a Clos fabric") and allow the device to use this
         policy information to infer its role and position. A final set of
-        datacenter operators would like to be able to simply
+        datacenter operators (e.g enterprise) would like to be able to simply
         unpack a new device, plug it in and have the device infer everything
         (it is unclear if this is a deployment model that we want to
         support).</t>
@@ -282,11 +282,37 @@
         record.</t>
 
         <t>Closely related to these considerations is the "scope" of the
-        discovery process</t>
+        discovery process. It is expected that many operators will wish to
+        only perform discovery on "infrastructure" or "fabric" interfaces, and
+        not interfaces which face customers.</t>
+
         <t>It is not clear that the solution that chosen will be able to
         meet all of the trust and deployment models, and we will need to
         prioritize which set(s) of deployment scenarios are the most important
         for the design team to solve.</t>
+
+        <t>Trust/Operational deployment driven requirements. The solution
+        should:
+            <list style="symbols">
+                <t>Allow operators to determine which classes of interfaces the
+                discovery protocol operates on (e.g: "Interfaces numbered 1-17" or
+                "Only 100GE interfaces"). This is likely an
+                implementation detail.</t>
+                <t>Allow operation in a "validation" or "verification" only
+                mode, where the Autoconf solution populates a database or model
+                showing what sessions it would bring up if allowed.</t>
+                <t>Ideally allow for differnt levels of "granularity" in
+                pre-configuration. For example, if the protocol is capable of
+                autoconfiguring everything, it should also support filtering or
+                limiting the session according to configured policy. (Likely an
+                implmentation detail)</t>
+                <t>Support preconfigured authentication systems. This is an
+                area where more discussion is needed! The solution MUST also
+                support a "no authentication" mode, and, for extra credit,
+                negotiated keying.(?)</t>
+                <t>Optionally support non-Ethernet interfaces, such as tunnels.
+                (Question - VLANS?!)</t>
+            </list></t>
         </section>
         </section>
 
