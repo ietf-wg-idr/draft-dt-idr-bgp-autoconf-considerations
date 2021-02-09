@@ -358,7 +358,7 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
       "no authentication" mode, and, for extra credit, negotiated
       keying.(?)
    *  Optionally support non-Ethernet interfaces, such as tunnels.
-      (Question - VLANS?!)
+      (Question - Tunnels?  VLANS?!)
 
 4.  Analysis of Candidate Approaches
 

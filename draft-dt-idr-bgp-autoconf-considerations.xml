@@ -311,7 +311,7 @@
                 support a "no authentication" mode, and, for extra credit,
                 negotiated keying.(?)</t>
                 <t>Optionally support non-Ethernet interfaces, such as tunnels.
-                (Question - VLANS?!)</t>
+                (Question - Tunnels? VLANS?!)</t>
             </list></t>
         </section>
         </section>
