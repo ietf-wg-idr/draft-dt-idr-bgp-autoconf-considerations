@@ -278,7 +278,7 @@
         which have been configured from the database match what the
         autodiscovered sessions would have created. Over time, if the
         BGP Autoconf solution proves to be successful, reliable and
-        scaleabe, operators may begin using it as the primary source of
+        scaleable, operators may begin using it as the primary source of
         record.</t>
 
         <t>Closely related to these considerations is the "scope" of the
