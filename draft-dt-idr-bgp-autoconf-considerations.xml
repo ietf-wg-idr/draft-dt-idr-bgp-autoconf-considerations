@@ -166,6 +166,30 @@
 		by the BGP OPEN message, can help detect sessions to the same
 		BGP Speaker carried in multiple protocols.</t>
             </section>
+	    <section title="BGP Auto-Discovery Device Role Requirements">
+		<t>As part of peer selection, it may be necessary to understand the
+		role of the discovered session to determine whether or not the BGP
+		Speaker desires to establish a peering session or not.</t>
+		<t>In some cases, role may be a clear function of the device in a
+		deployment.  An example of this is a discovered session for a BGP
+		Clos fabric: The interface may for a leaf, the aggregation layer, or
+		the spine layer.  Even then, the type of fabric, what pod it belongs
+		to and the peer type may be relevant information.</t>
+		<t>Some types of device roles may be subject to standardization,
+		such as BGP Clos fabrics.  Flexibility to permit operators to use
+		device roles for their own auto-configuration peer selection purposes
+		is a requirement.</t>
+		<t>Peering sessions may need to advertise they are capable to be used
+		for multiple roles.  Thus, it is a requirement that the auto-discovery
+		protocols permit advertising of multiple roles in the same PDU.</t>
+		<t>Since PDU space may be at a premium in some protocols, the code
+		space for device roles needs to be large enough to permit the
+		standardization of some values, but leave the majority available for
+		operator use.  It is recommended that 2-octet code spaces be
+		used, with the top 255 values reserved for standardized applications.
+		This leaves the remaining lower numbered code points to be easily
+		used by operators.</t>
+	    </section>
         </section>
         <section title="Operator Configuration">
 	<!-- XXX JMH - We have configuration requirements for our side, and
