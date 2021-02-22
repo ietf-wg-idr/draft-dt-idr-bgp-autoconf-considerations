@@ -4,13 +4,13 @@
 <!ENTITY RFC0826 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.0826.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC2385 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2385.xml">
-<!ENTITY RFC3352 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3352.xml">
 <!ENTITY RFC4272 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4272.xml">
 <!ENTITY RFC4301 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4301.xml">
 <!ENTITY RFC4861 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4861.xml">
 <!ENTITY RFC5082 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
 <!ENTITY RFC5925 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery.xml">
 <!ENTITY BGP-OSPF SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-ospf-bgp-rr.xml">
 <!ENTITY L3DL SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl.xml">
@@ -89,19 +89,26 @@
         <abstract>
             <t>This draft is an exploration of the requirements, the
             alternatives, and trade-offs in BGP peer auto-discovery at various
-            layers in the stack. It is based on discussions in the IDR WG BGP
-            Autoconf Design Team. The current target environment is the
-	    datacenter.</t>
+	    layers in the stack. It is based on discussions in the IDR Working
+	    Group BGP Autoconf Design Team. The current target environment is
+	    the datacenter.</t>
 	    <t>This document is not intended to become an RFC.</t>
         </abstract>
+        <note title="Requirements Language">
+	    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+	    NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
+	    in this document are to be interpreted as described in BCP 14 <xref
+	    target="RFC2119"/> <xref target="RFC8174"/> when, and only when,
+	    they appear in all capitals, as shown here.</t>
+        </note>
     </front>
     <middle>
         <section anchor="intro" title="Introduction">
             <t>This draft is an exploration of the requirements, the
             alternatives, and trade-offs in BGP peer auto-discovery at various
-            layers in the stack. It is based on discussions in the IDR WG BGP
-            Autoconf Design Team. The current target environment is the
-            datacenter.</t>
+	    layers in the stack. It is based on discussions in the IDR Working
+	    Group BGP Autoconf Design Team. The current target environment is
+	    the datacenter.</t>
         </section>
         <section title="Design Team Determinations">
             <section title="Problem Scope">
@@ -152,12 +159,12 @@
                 </t>
             <section title="BGP Auto-Discovery Protocol Transport Requirements">
 	    	<t>BGP Auto-Discovery Protocol State may be carried in multiple
-		transport protocols.</t>
-		<t>Implementations supporting more than one transport protocol
+		protocols operating in different transport layers.</t>
+		<t>Implementations supporting more than one protocol
 		for this state must have a mechanism for consistently selecting
 		discovered BGP sessions.  The BGP Identifier, which is carried
 		by the BGP OPEN message, can help detect sessions to the same
-		BGP Speaker carried in multiple transports.</t>
+		BGP Speaker carried in multiple protocols.</t>
             </section>
         </section>
         <section title="Operator Configuration">
@@ -169,10 +176,10 @@
             <list style="symbols">
                 <t>Select or otherwise filter which peers to actually try to
                 send BGP OPEN message.</t>
-                <t>Decide the parameters to use, for example:
+                <t>Decide the parameters to use.  For example:
                 <list style="symbols">
-                    <t>IP addressing: IPv4 or IPv6</t>
-                    <t>Interface for peering: Loopback, or Direct</t>
+                    <t>IP addressing: IPv4 or IPv6.</t>
+                    <t>Interface for peering: Loopback, or Direct.</t>
                     <t>Any special forwarding or routing needed for reaching
                     the prospective peer, for example, loopback.</t>
                     <t>AS numbering.</t>
@@ -189,8 +196,8 @@
         <section title="Considerations on Design Principles">
             <t>This section summarizes the considerations of possible criteria
             for the design of BGP auto-discovery mechanism, which may need
-            further discussion in a wider community than the design team (for
-	    example, the IDR WG).</t>
+            further discussion in a wider community than the design team; for
+	    example, the IDR Working Group.</t>
 
 	    <section title="Transport Considerations">
 		<t>The network layer of the discovery mechanism.  This may
@@ -264,10 +271,10 @@
         device, and interface 23 is connected to a device of type Y, then you
         must be at Stage-2 in a Clos fabric") and allow the device to use this
         policy information to infer its role and position. A final set of
-        datacenter operators (e.g enterprise) would like to be able to simply
-        unpack a new device, plug it in and have the device infer everything
-        (it is unclear if this is a deployment model that we want to
-        support).</t>
+        datacenter operators, for example enterprises, would like to be able to simply
+        unpack a new device, plug it in and have the device infer everything.
+        (It is unclear if this is a deployment model that we want to
+        support.)</t>
 
         <t>Many datacenter operators already have a well-developed process for
         installing and bringing up a new datacenter network, complete with
@@ -289,7 +296,7 @@
         <t>It is not clear that the solution that chosen will be able to
         meet all of the trust and deployment models, and we will need to
         prioritize which set(s) of deployment scenarios are the most important
-        for the design team to solve.</t>
+        for the Working Group to solve.</t>
 
         <t>Trust/Operational deployment driven requirements. The solution
         should:
@@ -305,13 +312,14 @@
                 pre-configuration. For example, if the protocol is capable of
                 autoconfiguring everything, it should also support filtering or
                 limiting the session according to configured policy. (Likely an
-                implementation detail)</t>
+                implementation detail.)</t>
                 <t>Support preconfigured authentication systems. This is an
                 area where more discussion is needed! The solution MUST also
-                support a "no authentication" mode, and, for extra credit,
-                negotiated keying.(?)</t>
-                <t>Optionally support non-Ethernet interfaces, such as tunnels.
-                (Question - Tunnels? VLANS?!)</t>
+		support a "no authentication" mode. Negotiated keying
+		solutions, such as IKE, may be desireable but not mandatory for
+		the solution.</t>
+		<t>Support Ethernet sub-interfaces such as VLANs.</t>
+                <t>Support non-Ethernet interfaces.  This may include tunnels.</t>
             </list></t>
         </section>
         </section>
@@ -326,6 +334,8 @@
                 the other one is based on Layer 3 Discovery Protocol, L3DL
                 <xref target="I-D.ietf-lsvr-l3dl" />.</t>
                 <section title="LLDP based Approach">
+		    <!-- Juniper has a prototype of LLDP behavior. Nokia has a
+		    shipping implementation, per Wim Hendrix? -->
                     <t>LLDP is a widely deployed protocol with implementations
                     in most devices in data centers. Currently it only advertises
                     the managment Layer-3 address, but could presumably be
@@ -626,6 +636,7 @@
     <back>
         <references title="Normative References">
 	    &RFC2119;
+	    &RFC8174;
 	</references>
         <references title="Informative References">
 	    &LLDP;
@@ -639,7 +650,6 @@
 	    &BGP-OSPF;
 	    &RFC0826;
 	    &RFC2385;
-	    &RFC3352;
 	    &RFC4272;
 	    &RFC4301;
 	    &RFC4861;
