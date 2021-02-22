@@ -199,7 +199,11 @@
             the following:
             <list style="symbols">
                 <t>Select or otherwise filter which peers to actually try to
-                send BGP OPEN message.</t>
+                send BGP OPEN message.
+                <list style="symbols">
+		    <t>Permit the matching of device role from the discovery protocol
+		    as part of peer selection.</t>
+                </list></t>
                 <t>Decide the parameters to use.  For example:
                 <list style="symbols">
                     <t>IP addressing: IPv4 or IPv6.</t>
@@ -208,6 +212,8 @@
                     the prospective peer, for example, loopback.</t>
                     <t>AS numbering.</t>
                     <t>BGP Authentication Options.</t>
+		    <t>BGP Policy that is appropriate for the type of discovered
+		    session.</t>
                 </list></t>
             </list></t>
             <t>In addition to actually forming the BGP sessions, a common
@@ -238,6 +244,28 @@
 	    	<t>The length of message supported by the protocol.</t>
 		<t>How extensible the protocol is to carry future state for BGP
 		auto-configuration.</t>
+	    </section>
+
+	    <section title="Auto-Discovery Protocol Timing Considerations">
+		<t>Establishing a reasonable expectation for the timeliness of
+		auto-configuration is desirable.  When a link is plugged-in, one
+		shouldn't have to wait minutes for sessions to be discovered and BGP
+		sessions attempted.  For protocols crafted explicitly for BGP
+		auto-configuration, timing to discovery should occur in a reasonable
+		amount of time; for example ten seconds or less.</t>
+		<t>Since discovery mechanisms may become very chatty when utilized by
+		a number of devices on shared networks, the protocol should not
+		impose undue burden on the devices on that network to process the
+		discovery messages.  New auto-discovery protcols MUST NOT transmit
+		messages more than once a second.</t>
+		<t>When an auto-discovery mechanism is used for a point-to-point
+		link, or with the expectation of establishing a BGP session with a
+		single BGP Speaker on that network, the auto-discovery protocol MAY
+		quiesce once the discovered BGP session has become Established.</t>
+		<t>In cases where the auto-discovery protocol is carried as
+		state in another protocol, that protocol will have its own timeliness
+		considerations.  The auto-discovery mechanism SHOULD NOT interfere
+		with the timing of the existing protocol.</t>
 	    </section>
 
             <section title="Relationship with BGP">
