@@ -132,7 +132,7 @@
 			<t>The ability to use directly attached interface
 			addresses, or the device's Loopback address.  When using
 			the Loopback address, potentially exchange additional
-			information to bootstrap routing to that address.</t>
+			information to bootstrap forwarding to that address.</t>
 			<t>Discovery of BGP transport protocol end-points and
 			key properties such as IP addresses, authentication
 			parameters, layer 3 liveness mechanisms such as
