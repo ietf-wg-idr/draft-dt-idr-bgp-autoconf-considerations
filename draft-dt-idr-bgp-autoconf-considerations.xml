@@ -148,11 +148,13 @@
 			some roles may be standardized to provide consistent
 			code points, the expectation is that roles will in many
 			cases be user-defined. Examples of roles may include things like:
-            "I'm at Layer (stage) 3 in the Clos fabric", "I'm a fabric egress
-            node", etc.</t>
-			<t>Once this information has been learned, a BGP Speaker
-			has the necessary information to determine if it wishes to
-			open a BGP session with the discovered BGP Speaker.</t>
+			"I'm at Layer (stage) 3 in the Clos fabric", "I'm a fabric egress
+			node", etc.</t>
+			<t>Once this information has been learned, discovery has been
+			completed. The BGP Speaker has the necessary information to
+			determine if it wishes to open a BGP session with the discovered
+			BGP Speaker.  It can then then initiate a BGP session with the
+			discovered BGP Speaker.</t>
 			<t>The existing BGP finite-state machine (FSM) will then
 			be leveraged to do all further work.</t>
                     </list>
