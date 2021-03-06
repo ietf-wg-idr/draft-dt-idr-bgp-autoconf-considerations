@@ -250,7 +250,7 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
       *  IP addressing: IPv4 or IPv6.
       *  Interface for peering: Loopback, or Direct.
       *  Any special forwarding or routing needed for reaching the
-         prospective peer, for example, loopback.
+         prospective peer; for example, loopback.
       *  AS numbering.
       *  BGP Authentication Options.
       *  BGP Policy that is appropriate for the type of discovered

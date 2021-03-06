@@ -211,7 +211,7 @@
                     <t>IP addressing: IPv4 or IPv6.</t>
                     <t>Interface for peering: Loopback, or Direct.</t>
                     <t>Any special forwarding or routing needed for reaching
-                    the prospective peer, for example, loopback.</t>
+                    the prospective peer; for example, loopback.</t>
                     <t>AS numbering.</t>
                     <t>BGP Authentication Options.</t>
 		    <t>BGP Policy that is appropriate for the type of discovered
