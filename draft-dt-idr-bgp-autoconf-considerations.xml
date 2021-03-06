@@ -9,7 +9,6 @@
 <!ENTITY RFC4861 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4861.xml">
 <!ENTITY RFC5082 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
 <!ENTITY RFC5925 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml">
-<!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC8177 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8177.xml">
 <!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery.xml">
@@ -721,7 +720,6 @@
 	    &RFC4861;
 	    &RFC5082;
 	    &RFC5925;
-	    &RFC6830;
 	    &RFC8177;
 	</references>
     </back>
