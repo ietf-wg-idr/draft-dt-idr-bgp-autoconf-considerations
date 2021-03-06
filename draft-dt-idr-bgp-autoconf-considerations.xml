@@ -156,7 +156,7 @@
 			BGP Speaker.  It can then then initiate a BGP session with the
 			discovered BGP Speaker.</t>
 			<t>The existing BGP finite-state machine (FSM) will then
-			be leveraged to do all further work.</t>
+			be leveraged to establish a BGP session.</t>
                     </list>
                 </t>
             <section title="BGP Auto-Discovery Protocol Transport Requirements">
@@ -171,7 +171,7 @@
 	    <section title="BGP Auto-Discovery Device Role Requirements">
 		<t>As part of peer selection, it may be necessary to understand the
 		role of the discovered session to determine whether or not the BGP
-		Speaker desires to establish a peering session or not.</t>
+		Speaker desires to establish a peering session.</t>
 		<t>In some cases, role may be a clear function of the device in a
 		deployment.  An example of this is a discovered session for a BGP
 		Clos fabric: The interface may for a leaf, the aggregation layer, or
@@ -181,9 +181,9 @@
 		such as BGP Clos fabrics.  Flexibility to permit operators to use
 		device roles for their own auto-configuration peer selection purposes
 		is a requirement.</t>
-		<t>Peering sessions may need to advertise they are capable to be used
+		<t>Peering sessions may need to advertise that they are capable to be used
 		for multiple roles.  Thus, it is a requirement that the auto-discovery
-		protocols permit advertising of multiple roles in the same PDU.</t>
+		protocols permit advertising multiple roles in the same PDU.</t>
 		<t>Since PDU space may be at a premium in some protocols, the code
 		space for device roles needs to be large enough to permit the
 		standardization of some values, but leave the majority available for
@@ -201,7 +201,7 @@
             the following:
             <list style="symbols">
                 <t>Select or otherwise filter which peers to actually try to
-                send BGP OPEN message.
+                send BGP OPEN messages.
                 <list style="symbols">
 		    <t>Permit the matching of device role from the discovery protocol
 		    as part of peer selection.</t>
@@ -219,20 +219,20 @@
                 </list></t>
             </list></t>
             <t>In addition to actually forming the BGP sessions, a common
-            deplyoment model may also the so called "validation" model. In this
+            deployment model may also be the so called "validation" model. In this
             model, the operator configures the BGP sessions manually, and uses
             the information collected/populated by the BGP Autoconf mechanism
             to validate that the sessions are correct.</t>
             </section>
         </section>
-        <section title="Considerations on Design Principles">
+        <section title="Design Principle Considerations">
             <t>This section summarizes the considerations of possible criteria
-            for the design of BGP auto-discovery mechanism, which may need
+            for the design of a BGP auto-discovery mechanism, which may need
             further discussion in a wider community than the design team; for
 	    example, the IDR Working Group.</t>
 
 	    <section title="Transport Considerations">
-		<t>The network layer of the discovery mechanism.  This may
+		<t>The network layer of the discovery mechanism may
 		impact the scoping of the deployment of the auto-discovery
 		mechanism.
 		    <list style="symbols">
@@ -243,7 +243,7 @@
 	    	</t>
 	    	<t>Potentially leveraging existing protocols deployed in the data
 		center.</t>
-	    	<t>The length of message supported by the protocol.</t>
+	    	<t>The length of messages supported by the protocol.</t>
 		<t>How extensible the protocol is to carry future state for BGP
 		auto-configuration.</t>
 	    </section>
@@ -251,9 +251,9 @@
 	    <section title="Auto-Discovery Protocol Timing Considerations">
 		<t>Establishing a reasonable expectation for the timeliness of
 		auto-configuration is desirable.  When a link is plugged-in, one
-		shouldn't have to wait minutes for sessions to be discovered and BGP
-		sessions attempted.  For protocols crafted explicitly for BGP
-		auto-configuration, timing to discovery should occur in a reasonable
+		shouldn't have to wait minutes for potential peers to be discovered and BGP
+		session establishment attempted.  For protocols crafted explicitly for BGP
+		auto-configuration, the time for discovery should be a reasonable
 		amount of time; for example ten seconds or less.</t>
 		<t>Since discovery mechanisms may become very chatty when utilized by
 		a number of devices on shared networks, the protocol should not
@@ -274,10 +274,10 @@
 	    <t>
             <list style="symbols">
                 <t>The auto-discovery mechanism should be independent from BGP
-		session establishment of the discovered session.</t>
+		session establishment.</t>
                 <t>Not affect on BGP session establishment and routing
                 exchange, other than the interactions for triggering the
-                setup/removal of peer session based on discovery mechanism.</t>
+                setup/removal of peer sessions based on the discovery mechanism.</t>
 		<!-- XXX JMH - Here the example of draft-xu dropping sessions is
 		a discussion point -->
                 <t>Potentially leveraging existing BGP protocol sessions for
@@ -290,7 +290,7 @@
 		or more auto-discovery protocols.  Even for a single protocol, multiple
 		transport session endpoints may be discovered for the same BGP Speaker.
 		These different sessions may be required for supporting different address
-		families such as IPv4/IPv6 depending on the BGP operational practices for
+		families, such as IPv4/IPv6, depending on the BGP operational practices for
 		that device.  Examples include a distinct and matching session for the
 		IPv4/IPv6 address family, a unified session carrying IPv4 over IPv6 and
 		vice-versa, etc.</t>
@@ -300,7 +300,7 @@
 		protocol.</t>
 		<t>When multiple mechanisms exist to discovery the same BGP speaker in an
 		implementation, that implementation MUST document the process by which it
-		chooses discovered sessions.  Those implementations also MUST describe
+		chooses discovered peers.  Those implementations also MUST describe
 		interactions with their protocol state machinery for each mechanism.</t>
 	    </section>
 
@@ -311,7 +311,7 @@
         very strict physical protection of the datacenter, and their
         deployment model assumes that anything which plugs into devices in the
         datacenter is, by definition, trusted. Other operators take a very
-        different approach, and assume the least amount of trust possible.</t>
+        different approach, and assume the least possible amount of trust.</t>
 
         <t>Much of this difference is also reflected in the operator's
         bootstrapping solution. Some operators build individual configurations
@@ -321,7 +321,7 @@
         operating system and configuration onto the device, based on a unique
         device identifier (such as management Ethernet MAC address). Some
         operators pre-configure devices with identical base configurations
-        containing some bootstrapping policy logic ("If you are a Model-X
+        containing some bootstrapping policy logic (e.g., "If you are a Model-X
         device, and interface 23 is connected to a device of type Y, then you
         must be at Stage-2 in a Clos fabric") and allow the device to use this
         policy information to infer its role and position. A final set of
@@ -338,7 +338,7 @@
         that the datacenter is correctly cabled, and that the BGP sessions
         which have been configured from the database match what the
         autodiscovered sessions would have created. Over time, if the
-        BGP Autoconf solution proves to be successful, reliable and
+        BGP Autoconf solution proves to be successful, reliable, and
         scaleable, operators may begin using it as the primary source of
         record.</t>
 
@@ -381,11 +381,11 @@
         <section title="Analysis of Candidate Approaches">
             <section title="BGP Peer Discovery at Layer Two">
                 <t>BGP Discovery at Layer-2 would entail finding potential
-                peers on a LAN or on Point-to-Point links, discovering their
-                Layer-3 attributes such as IP addresses, etc.</t>
+                peers on a LAN or on Point-to-Point links and discovering their
+                Layer-3 attributes, such as, IP addresses, etc.</t>
                 <t>There are two available candidates for peer discovery at
-                Layer-2, one is based on Link Layer Discovery Protocol (LLDP),
-                the other one is based on Layer 3 Discovery Protocol, L3DL
+                Layer-2, one is based on Link Layer Discovery Protocol (LLDP)
+                and the other is based on Layer 3 Discovery Protocol, L3DL
                 <xref target="I-D.ietf-lsvr-l3dl" />.</t>
                 <section title="LLDP based Approach">
 		    <!-- Juniper has a prototype of LLDP behavior. Nokia has a
@@ -409,7 +409,7 @@
                         <t>IP address (IPv4 or IPv6)</t>
                         <t>Local AS number</t>
                         <t>Local BGP Identifier (AKA, BGP Router ID)</t>
-                        <t>Session Group-ID</t>
+                        <t>Session Group-ID; i.e., the BGP Device Role</t>
                         <t>BGP Session Capabilities</t>
                         <t>Key Chain</t>
                         <t>Local Address (as BGP Next Hop).</t>
@@ -418,7 +418,7 @@
                 <section title="L3DL based Approach">
                     <t>L3DL
                     <xref target="I-D.ietf-lsvr-l3dl" /> is an ongoing
-                    development in the IETF LSVR Working Group with the goals
+                    development in the IETF LSVR Working Group with the goal
                     of discovering IP Layer-3 attributes of links, such as
                     neighbor IP addressing, logical link IP encapsulation
                     abilities, and link liveness which may then be disseminated
@@ -429,7 +429,7 @@
                     BGP session with a discovered peer. Details such as
                     loopback peering are handled by attributes in the L3DL
                     protocol itself. The information which can be discovered by
-                    L3DL is
+                    L3DL is:
                     <list style="symbols">
                         <t>AS number</t>
                         <t>Local IP address, IPv4 or IPv6, and</t>
@@ -439,11 +439,11 @@
                     mechanisms, see
                     <xref target="I-D.ietf-lsvr-l3dl-signing" />.</t>
                     <t>The functionality of L3DL-ULPC is similar but not quite
-                    the same as the needs of IDR Design Team. E.g., L3DL is
+                    the same as the needs of IDR Design Team. For example, L3DL is
                     designed to meet more complex needs. L3DL's predecessor,
                     LSOE
                     <xref target="I-D.ietf-lsvr-lsoe" />, was simpler and might
-                    be a better candidate for adaptation. If needed the design
+                    be a better candidate for adaptation. If needed, the design
                     of LSOE may be customized for the needs of BGP peer auto-
                     disovery.</t>
                     <t>Unlike LLDP, L3DL has only one implementation, and LSOE
@@ -462,7 +462,7 @@
 		<t>Such existing mechanisms do not provide an auto-discovery protocol with
 		necessary parameters.  Rather, they simplify configuration by permitting
 		BGP session configuration templates to be easily applied to interfaces
-		without requiring numbering to be known a priori.</t>
+		without requiring addressing to be known a priori.</t>
 	    </section>
 	    <section title="BGP peer Discovery at Layer Three">
 		<t>Discovery at Layer-3 can assume IP addressability, though the IP
@@ -619,8 +619,9 @@
 	    </section>
 
 	    <section title="Auto-discovery Protocol Considerations">
-		<t>As noted in previous sections, BGP auto-discovery may occur scoped in
-		many portions of the network.  The information present in the
+		<t>As noted in previous sections, BGP auto-discovery be scoped to different
+		portions of the network dependent on the network layar at which it is
+		deployed.  The information present in the
 		auto-discovery protocol is considered sensitive, since it identifies
 		resources running the BGP protocol.  Care should be exercised in avoiding
 		inadvertent disclosure of BGP sessions that are configured to permit
@@ -666,7 +667,7 @@
 
 		<section title="Desired Security Properties of the Auto-discovery Protocols">
 		    <t>Data Integrity is a required property.  The data that is
-		    transmitted by a speaker fo the auto-configuration protocol should be
+		    transmitted by a speaker of the auto-configuration protocol should be
 		    able to pass among its speakers properly.</t>
 
 		    <t>Peer Entity authentication is a required property for Layer 2 and
