@@ -300,79 +300,78 @@
 		interactions with their protocol state machinery for each mechanism.</t>
 	    </section>
 
-	<!-- XXX JMH - reindent -->
-        <section title="Operational Trust Considerations">
-        <t>Different deployment models will have different trust models and
-        requirements. Some of this will be driven by the size, complexity and
-        operational practices of the operator. For example, some operators have
-        very strict physical protection of the datacenter, and their
-        deployment model assumes that anything which plugs into devices in the
-        datacenter is, by definition, trusted. Other operators take a very
-        different approach, and assume the least possible amount of trust.</t>
+	    <section title="Operational Trust Considerations">
+		<t>Different deployment models will have different trust models and
+		requirements. Some of this will be driven by the size, complexity and
+		operational practices of the operator. For example, some operators have
+		very strict physical protection of the datacenter, and their
+		deployment model assumes that anything which plugs into devices in the
+		datacenter is, by definition, trusted. Other operators take a very
+		different approach, and assume the least possible amount of trust.</t>
 
-        <t>Much of this difference is also reflected in the operator's
-        bootstrapping solution. Some operators build individual configurations
-        for each device, and manually provision the configuration into the
-        non-volatile storage of the device before it is shipped. Other
-        operators use solutions similar to PXE Boot to automatically load an
-        operating system and configuration onto the device, based on a unique
-        device identifier (such as management Ethernet MAC address). Some
-        operators pre-configure devices with identical base configurations
-        containing some bootstrapping policy logic (e.g., "If you are a Model-X
-        device, and interface 23 is connected to a device of type Y, then you
-        must be at Stage-2 in a Clos fabric") and allow the device to use this
-        policy information to infer its role and position. A final set of
-        datacenter operators, for example enterprises, would like to be able to simply
-        unpack a new device, plug it in and have the device infer everything.
-        (It is unclear if this is a deployment model that we want to
-        support.)</t>
+		<t>Much of this difference is also reflected in the operator's
+		bootstrapping solution. Some operators build individual configurations
+		for each device, and manually provision the configuration into the
+		non-volatile storage of the device before it is shipped. Other
+		operators use solutions similar to PXE Boot to automatically load an
+		operating system and configuration onto the device, based on a unique
+		device identifier (such as management Ethernet MAC address). Some
+		operators pre-configure devices with identical base configurations
+		containing some bootstrapping policy logic (e.g., "If you are a Model-X
+		device, and interface 23 is connected to a device of type Y, then you
+		must be at Stage-2 in a Clos fabric") and allow the device to use this
+		policy information to infer its role and position. A final set of
+		datacenter operators, for example enterprises, would like to be able to simply
+		unpack a new device, plug it in and have the device infer everything.
+		(It is unclear if this is a deployment model that we want to
+		support.)</t>
 
-        <t>Many datacenter operators already have a well-developed process for
-        installing and bringing up a new datacenter network, complete with
-        solutions to bootstrap and configure the network. These operators will
-        want to be able to use the BGP Autoconf mechanism to perform validation
-        of the datacenter fabric, and ongoing "sanity-checking" to confirm
-        that the datacenter is correctly cabled, and that the BGP sessions
-        which have been configured from the database match what the
-        autodiscovered sessions would have created. Over time, if the
-        BGP Autoconf solution proves to be successful, reliable, and
-        scaleable, operators may begin using it as the primary source of
-        record.</t>
+		<t>Many datacenter operators already have a well-developed process for
+		installing and bringing up a new datacenter network, complete with
+		solutions to bootstrap and configure the network. These operators will
+		want to be able to use the BGP Autoconf mechanism to perform validation
+		of the datacenter fabric, and ongoing "sanity-checking" to confirm
+		that the datacenter is correctly cabled, and that the BGP sessions
+		which have been configured from the database match what the
+		autodiscovered sessions would have created. Over time, if the
+		BGP Autoconf solution proves to be successful, reliable, and
+		scaleable, operators may begin using it as the primary source of
+		record.</t>
 
-        <t>Closely related to these considerations is the "scope" of the
-        discovery process. It is expected that many operators will wish to
-        only perform discovery on "infrastructure" or "fabric" interfaces, and
-        not interfaces which face customers.</t>
+		<t>Closely related to these considerations is the "scope" of the
+		discovery process. It is expected that many operators will wish to
+		only perform discovery on "infrastructure" or "fabric" interfaces, and
+		not interfaces which face customers.</t>
 
-        <t>It is not clear that the solution that chosen will be able to
-        meet all of the trust and deployment models, and we will need to
-        prioritize which set(s) of deployment scenarios are the most important
-        for the Working Group to solve.</t>
+		<t>It is not clear that the solution that chosen will be able to
+		meet all of the trust and deployment models, and we will need to
+		prioritize which set(s) of deployment scenarios are the most important
+		for the Working Group to solve.</t>
 
-        <t>Trust/Operational deployment driven requirements. The solution
-        should:
-            <list style="symbols">
-                <t>Allow operators to determine which classes of interfaces the
-                discovery protocol operates on (e.g: "Interfaces numbered 1-17" or
-                "Only 100GE interfaces"). This is likely an
-                implementation detail.</t>
-                <t>Allow operation in a "validation" or "verification" only
-                mode, where the Autoconf solution populates a database or model
-                showing what sessions it would bring up if allowed.</t>
-                <t>Ideally allow for different levels of "granularity" in
-                pre-configuration. For example, if the protocol is capable of
-                autoconfiguring everything, it should also support filtering or
-                limiting the session according to configured policy. (Likely an
-                implementation detail.)</t>
-                <t>Support preconfigured authentication systems. This is an
-                area where more discussion is needed! The solution MUST also
-		support a "no authentication" mode. Negotiated keying
-		solutions, such as IKE, may be desireable but not mandatory for
-		the solution.</t>
-		<t>Support Ethernet sub-interfaces such as VLANs.</t>
-                <t>Support non-Ethernet interfaces.  This may include tunnels.</t>
-            </list></t>
-        </section>
+		<t>Trust/Operational deployment driven requirements. The solution
+		should:
+		<list style="symbols">
+		    <t>Allow operators to determine which classes of interfaces the
+		    discovery protocol operates on (e.g: "Interfaces numbered 1-17" or
+		    "Only 100GE interfaces"). This is likely an
+		    implementation detail.</t>
+		    <t>Allow operation in a "validation" or "verification" only
+		    mode, where the Autoconf solution populates a database or model
+		    showing what sessions it would bring up if allowed.</t>
+		    <t>Ideally allow for different levels of "granularity" in
+		    pre-configuration. For example, if the protocol is capable of
+		    autoconfiguring everything, it should also support filtering or
+		    limiting the session according to configured policy. (Likely an
+		    implementation detail.)</t>
+		    <t>Support preconfigured authentication systems. This is an
+		    area where more discussion is needed! The solution MUST also
+		    support a "no authentication" mode. Negotiated keying
+		    solutions, such as IKE, may be desireable but not mandatory for
+		    the solution.</t>
+		    <t>Support Ethernet sub-interfaces such as VLANs.</t>
+		    <t>Support non-Ethernet interfaces.  This may include tunnels.</t>
+		</list></t>
+	    </section>
 	    <section title="Error Handling Considerations">
 		<t>The purpose of the BGP auto-discovery protocol is to discover potential
 		BGP sessions and provide enough information for a BGP Speaker to start a

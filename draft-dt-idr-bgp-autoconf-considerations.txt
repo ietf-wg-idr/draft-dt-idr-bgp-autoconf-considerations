@@ -452,7 +452,7 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
 
       transport security configuration, etc.  In these cases, a BGP
       Speaker attempts to establish a session and fails.
-      Implementations should provide a way to clear such discovered
+      Implementations SHOULD provide a way to clear such discovered
       sessions or exclude them from further connect attempts.
    o  The BGP transport session connects, but the parameters in the BGP
       OPEN message do not match those in the auto-discovery protocol.
