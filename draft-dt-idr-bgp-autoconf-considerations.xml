@@ -11,6 +11,7 @@
 <!ENTITY RFC5925 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
+<!ENTITY RFC8177 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8177.xml">
 <!ENTITY LLDP SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-idr-lldp-peer-discovery.xml">
 <!ENTITY BGP-OSPF SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.acee-ospf-bgp-rr.xml">
 <!ENTITY L3DL SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl.xml">
@@ -134,10 +135,14 @@
 			the Loopback address, potentially exchange additional
 			information to bootstrap forwarding to that address.</t>
 			<t>Discovery of BGP transport protocol end-points and
-			key properties such as IP addresses, authentication
+			essential properties such as IP addresses, transport security
 			parameters, layer 3 liveness mechanisms such as
 			BFD, and support for GTSM <xref target="RFC5082"/>.</t>
 			<!-- XXX JMH What about ports? -->
+			<t>Transport security parameters include protocol - such as TCP-AO,
+			IPsec, TCP-MD5 - and necessary configuration for that protocol.
+			Some example considerations for this are represented in 
+			<xref target="RFC8177">YANG Data Model for Key Chains</xref>.</t>
 			<t>Discovery of BGP peer session parameters relevant to
 			peer selection such as Autonomous System (AS) Numbers,
 			BGP Identifiers, supported address
@@ -155,8 +160,6 @@
 			determine if it wishes to open a BGP session with the discovered
 			BGP Speaker.  It can then then initiate a BGP session with the
 			discovered BGP Speaker.</t>
-			<t>The existing BGP finite-state machine (FSM) will then
-			be leveraged to establish a BGP session.</t>
                     </list>
                 </t>
             <section title="BGP Auto-Discovery Protocol Transport Requirements">
@@ -184,13 +187,6 @@
 		<t>Peering sessions may need to advertise that they are capable to be used
 		for multiple roles.  Thus, it is a requirement that the auto-discovery
 		protocols permit advertising multiple roles in the same PDU.</t>
-		<t>Since PDU space may be at a premium in some protocols, the code
-		space for device roles needs to be large enough to permit the
-		standardization of some values, but leave the majority available for
-		operator use.  It is recommended that 2-octet code spaces be
-		used, with the top 255 values reserved for standardized applications.
-		This leaves the remaining lower numbered code points to be easily
-		used by operators.</t>
 	    </section>
         </section>
         <section title="Operator Configuration">
@@ -213,7 +209,7 @@
                     <t>Any special forwarding or routing needed for reaching
                     the prospective peer; for example, loopback.</t>
                     <t>AS numbering.</t>
-                    <t>BGP Authentication Options.</t>
+                    <t>BGP Transport Security Parameters.</t>
 		    <t>BGP Policy that is appropriate for the type of discovered
 		    session.</t>
                 </list></t>
@@ -304,6 +300,7 @@
 		interactions with their protocol state machinery for each mechanism.</t>
 	    </section>
 
+	<!-- XXX JMH - reindent -->
         <section title="Operational Trust Considerations">
         <t>Different deployment models will have different trust models and
         requirements. Some of this will be driven by the size, complexity and
@@ -376,6 +373,35 @@
                 <t>Support non-Ethernet interfaces.  This may include tunnels.</t>
             </list></t>
         </section>
+	    <section title="Error Handling Considerations">
+		<t>The purpose of the BGP auto-discovery protocol is to discover potential
+		BGP sessions and provide enough information for a BGP Speaker to start a
+		BGP session.  It is possible for the information present in the
+		auto-discovery protocol to not match the session's information.  Such
+		mis-matches will result in different classes of problems:
+		<list style="symbols">
+		    <t>The BGP transport session may not connect.  This could be the
+		    result of mismatches in IP addresses, GTSM configuration, BGP
+		    transport security configuration, etc.  In these cases, a BGP Speaker
+		    attempts to establish a session and fails.  Implementations SHOULD
+		    provide a way to clear such discovered sessions or exclude them from
+		    further connect attempts.</t>
+		    <t>The BGP transport session connects, but the parameters in the BGP
+		    OPEN message do not match those in the auto-discovery protocol.  In
+		    this case, the implementation may wish to disconnect from the BGP
+		    session and exclude it from further connection attempts.  The
+		    implementation SHOULD raise a visible fault to the operator.  The
+		    implementation SHOULD provide a mechanism to permit further attempts
+		    to connect to the discovered session.</t>
+		    <t>The operator may choose to leverage the auto-discovery mode for
+		    validation purposes only.  The implementation should provide access to
+		    the operator for discovered BGP sessions from the auto-discovery
+		    protocol; for example via the user-interface.  The implementation
+		    SHOULD permit a manually configured BGP session to conflict with
+		    information present in the auto-discovery protocol, but SHOULD raise
+		    an alarm with the operator that this has been done.</t>
+		</list></t>
+	    </section>
         </section>
 
         <section title="Analysis of Candidate Approaches">
@@ -575,20 +601,6 @@
 		    session or transport properties such as BFD or GTSM.</t>
 		</section>
 	    </section>
-	    <section title="Discovery at Layer Seven">
-		<t>Peer discovery at Layer-7 requires application layer
-		rendezvous mechanisms analogous to those used by LISP,
-		<xref target="RFC6830" /> or the Bitcoin Protocol.</t>
-		<t>If the infrastructure is at all complex, for example, multi-segment
-		or worse, then it will need prior routing/forwarding knowledge
-		in order to reach the rendezvous. In a BGP centric deployment
-		this could pose a chicken and egg problem.</t>
-		<t>Rendezvous approaches may appeal to deployments which favor
-		a central control framework.</t>
-		<t>On the other hand, those who favor distributed protocols
-		will have the classic worries about fragility, redundancy,
-		reliability, etc.</t>
-	    </section>
 	</section>
         <section title="IANA Considerations">
             <t>This document makes no request of IANA.</t>
@@ -711,6 +723,7 @@
 	    &RFC5082;
 	    &RFC5925;
 	    &RFC6830;
+	    &RFC8177;
 	</references>
     </back>
 </rfc>
