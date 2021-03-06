@@ -8,6 +8,7 @@
 <!ENTITY RFC4301 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4301.xml">
 <!ENTITY RFC4861 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4861.xml">
 <!ENTITY RFC5082 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
+<!ENTITY RFC5880 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5880.xml">
 <!ENTITY RFC5925 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC8177 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8177.xml">
@@ -125,69 +126,88 @@
 		exchanged by the BGP FSM, including its OPEN message.</t>
             </section>
             <section title="BGP Auto-Discovery Protocol State Requirements">
-                <t>
-                    <list style="symbols">
-			<t>Support for IPv4 and IPv6 address families, but do
-			not assume that both are available.</t>
-			<t>The ability to use directly attached interface
-			addresses, or the device's Loopback address.  When using
-			the Loopback address, potentially exchange additional
-			information to bootstrap forwarding to that address.</t>
-			<t>Discovery of BGP transport protocol end-points and
-			essential properties such as IP addresses, transport security
-			parameters, layer 3 liveness mechanisms such as
-			BFD, and support for GTSM <xref target="RFC5082"/>.</t>
-			<!-- XXX JMH What about ports? -->
-			<t>Transport security parameters include protocol - such as TCP-AO,
-			IPsec, TCP-MD5 - and necessary configuration for that protocol.
-			Some example considerations for this are represented in 
-			<xref target="RFC8177">YANG Data Model for Key Chains</xref>.</t>
-			<t>Discovery of BGP peer session parameters relevant to
-			peer selection such as Autonomous System (AS) Numbers,
-			BGP Identifiers, supported address
-			families/subsequent-address families (AFI/SAFIs), and
-			device roles.</t>
-			<t>Device roles are the minimal information available
-			for peer selection for a particular application.  While
-			some roles may be standardized to provide consistent
-			code points, the expectation is that roles will in many
-			cases be user-defined. Examples of roles may include things like:
-			"I'm at Layer (stage) 3 in the Clos fabric", "I'm a fabric egress
-			node", etc.</t>
-			<t>Once this information has been learned, discovery has been
-			completed. The BGP Speaker has the necessary information to
-			determine if it wishes to open a BGP session with the discovered
-			BGP Speaker.  It can then then initiate a BGP session with the
-			discovered BGP Speaker.</t>
-                    </list>
-                </t>
-            <section title="BGP Auto-Discovery Protocol Transport Requirements">
-	    	<t>BGP Auto-Discovery Protocol State may be carried in multiple
-		protocols operating in different transport layers.</t>
-		<t>Implementations supporting more than one protocol
-		for this state must have a mechanism for consistently selecting
-		discovered BGP sessions.  The BGP Identifier, which is carried
-		by the BGP OPEN message, can help detect sessions to the same
-		BGP Speaker carried in multiple protocols.</t>
-            </section>
-	    <section title="BGP Auto-Discovery Device Role Requirements">
-		<t>As part of peer selection, it may be necessary to understand the
-		role of the discovered session to determine whether or not the BGP
-		Speaker desires to establish a peering session.</t>
-		<t>In some cases, role may be a clear function of the device in a
-		deployment.  An example of this is a discovered session for a BGP
-		Clos fabric: The interface may for a leaf, the aggregation layer, or
-		the spine layer.  Even then, the type of fabric, what pod it belongs
-		to and the peer type may be relevant information.</t>
-		<t>Some types of device roles may be subject to standardization,
-		such as BGP Clos fabrics.  Flexibility to permit operators to use
-		device roles for their own auto-configuration peer selection purposes
-		is a requirement.</t>
-		<t>Peering sessions may need to advertise that they are capable to be used
-		for multiple roles.  Thus, it is a requirement that the auto-discovery
-		protocols permit advertising multiple roles in the same PDU.</t>
+		<t>Tersely, the required state that MUST be carried by the BGP
+		Auto-Discovery Protocol for a discovered session include:</t>
+
+		<t>BGP Session Transport State:
+		<list style="symbols">
+		    <t>IP addresses</t>
+		    <t>Transport security parameters</t>
+		    <t><xref target="RFC5082">GTSM</xref> configuration, if any</t>
+		    <t><xref target="RFC5880">BFD</xref> configuration, if any</t>
+		</list></t>
+
+		<t>BGP Session Protocol State:
+		<list style="symbols">
+		    <t>AS Numbers</t>
+		    <t>BGP Identifier</t>
+		    <t>Supported AFI/SAFIs</t>
+		    <t>Device Role</t>
+		</list></t>
+
+		<t>Once this information has been learned, discovery has been
+		completed. The BGP Speaker has the necessary information to
+		determine if it wishes to open a BGP session with the discovered
+		BGP Speaker.  It can then then initiate a BGP session with the
+		discovered BGP Speaker.</t>
+
+            <section title="BGP Session Transport State">
+                <t><list style="symbols">
+		    <t>Support for IPv4 and IPv6 address families, but do
+		    not assume that both are available.</t>
+		    <t>The ability to use directly attached interface
+		    addresses, or the device's Loopback address.  When using
+		    the Loopback address, potentially exchange additional
+		    information to bootstrap forwarding to that address.</t>
+		    <t>Discovery of BGP transport protocol end-points and
+		    essential properties such as IP addresses, transport security
+		    parameters, layer 3 liveness mechanisms such as
+		    BFD, and support for GTSM.</t>
+		    <!-- XXX JMH What about ports? -->
+		    <t>Transport security parameters include protocol - such as plain TCP,
+		    <xref target="RFC5925">TCP-AO</xref>, <xref target="RFC4301">IPsec</xref>, 
+		    <xref target="RFC2385">TCP-MD5</xref> - and necessary configuration for that
+		    protocol.  Some example considerations for this are represented in 
+		    <xref target="RFC8177">YANG Data Model for Key Chains</xref>.</t>
+		</list></t>
+	    </section>
+            <section title="BGP Session Protocol State">
+                <t><list style="symbols">
+		    <t>Discovery of BGP peer session parameters relevant to
+		    peer selection such as Autonomous System (AS) Numbers,
+		    BGP Identifiers, supported address
+		    families/subsequent-address families (AFI/SAFIs), and
+		    device roles.</t>
+		</list></t>
+
+		<section title="BGP Auto-Discovery Device Role Requirements">
+		    <t>As part of peer selection, it may be necessary to understand the
+		    role of the discovered session to determine whether or not the BGP
+		    Speaker desires to establish a peering session.</t>
+		    <t>In some cases, role may be a clear function of the device in a
+		    deployment.  An example of this is a discovered session for a BGP
+		    Clos fabric: The interface may for a leaf, the aggregation layer, or
+		    the spine layer.  Even then, the type of fabric, what pod it belongs
+		    to and the peer type may be relevant information.</t>
+		    <t>Some types of device roles may be subject to standardization,
+		    such as BGP Clos fabrics.  Flexibility to permit operators to use
+		    device roles for their own auto-configuration peer selection purposes
+		    is a requirement.</t>
+		    <t>Peering sessions may need to advertise that they are capable to be used
+		    for multiple roles.  Thus, it is a requirement that the auto-discovery
+		    protocols permit advertising multiple roles in the same PDU.</t>
+		</section>
 	    </section>
         </section>
+	<section title="BGP Auto-Discovery Protocol Transport Requirements">
+	    <t>BGP Auto-Discovery Protocol State may be carried in multiple
+	    protocols operating in different transport layers.</t>
+	    <t>Implementations supporting more than one protocol
+	    for this state must have a mechanism for consistently selecting
+	    discovered BGP sessions.  The BGP Identifier, which is carried
+	    by the BGP OPEN message, can help detect sessions to the same
+	    BGP Speaker carried in multiple protocols.</t>
+	</section>
         <section title="Operator Configuration">
 	<!-- XXX JMH - We have configuration requirements for our side, and
 	acceptable peer requirements on the other side. -->
@@ -419,8 +439,7 @@
 		However, care must be taken to not permit sessions to be setup outside of
 		trusted environments.  It is RECOMMENDED that sessions advertised using
 		BGP auto-discovery be protected at the transport layer using mechanisms
-		such as TCP-AO <xref target="RFC5925"/>, IPsec <xref target="RFC4301"/>,
-		or the deprecated TCP-MD5 <xref target="RFC2385"/>.</t>
+		such as TCP-AO, IPsec, or the deprecated TCP-MD5.</t>
 
 		<t>It is thus a requirement that the auto-discovery protocol carry
 		sufficient information to determine what transport security is to be used
@@ -521,6 +540,7 @@
 	    &RFC4301;
 	    &RFC4861;
 	    &RFC5082;
+	    &RFC5880;
 	    &RFC5925;
 	    &RFC8177;
 	</references>
