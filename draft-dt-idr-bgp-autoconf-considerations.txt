@@ -924,11 +924,6 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
               Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
               June 2010, <https://www.rfc-editor.org/info/rfc5925>.
 
-   [RFC6830]  Farinacci, D., Fuller, V., Meyer, D., and D. Lewis, "The
-              Locator/ID Separation Protocol (LISP)", RFC 6830,
-              DOI 10.17487/RFC6830, January 2013,
-              <https://www.rfc-editor.org/info/rfc6830>.
-
    [RFC8177]  Lindem, A., Ed., Qu, Y., Yeung, D., Chen, I., and J.
               Zhang, "YANG Data Model for Key Chains", RFC 8177,
               DOI 10.17487/RFC8177, June 2017,
@@ -943,6 +938,11 @@ Authors' Addresses
    US
 
    Email: randy@psg.com
+
+
+
+
+
 
 
 
