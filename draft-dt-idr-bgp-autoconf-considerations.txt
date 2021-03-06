@@ -93,19 +93,19 @@ Table of Contents
      4.1.  BGP Peer Discovery at Layer Two . . . . . . . . . . . . .   8
        4.1.1.  LLDP based Approach . . . . . . . . . . . . . . . . .   9
        4.1.2.  L3DL based Approach . . . . . . . . . . . . . . . . .   9
-   5.  BGP peer Discovery at Layer Three . . . . . . . . . . . . . .  10
-     5.1.  New BGP Hello Message based Approach  . . . . . . . . . .  10
-     5.2.  BGP OPEN Message based Approach . . . . . . . . . . . . .  11
-     5.3.  Bootstrapping BGP via BGP . . . . . . . . . . . . . . . .  11
-     5.4.  Bootstrapping BGP via OSPF  . . . . . . . . . . . . . . .  12
-     5.5.  Discovery at Layer Seven  . . . . . . . . . . . . . . . .  12
-     5.6.  Link-Local Discovery  . . . . . . . . . . . . . . . . . .  13
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-     7.1.  BGP Transport Security Considerations . . . . . . . . . .  13
-     7.2.  Auto-discovery Protocol Considerations  . . . . . . . . .  14
-       7.2.1.  Potential Scopes of an Auto-discovery Protocol  . . .  14
-       7.2.2.  Desired Security Properties of the Auto-discovery
+     4.2.  Link-Local Discovery  . . . . . . . . . . . . . . . . . .  10
+     4.3.  BGP peer Discovery at Layer Three . . . . . . . . . . . .  10
+       4.3.1.  New BGP Hello Message based Approach  . . . . . . . .  11
+       4.3.2.  BGP OPEN Message based Approach . . . . . . . . . . .  11
+       4.3.3.  Bootstrapping BGP via BGP . . . . . . . . . . . . . .  12
+       4.3.4.  Bootstrapping BGP via OSPF  . . . . . . . . . . . . .  12
+     4.4.  Discovery at Layer Seven  . . . . . . . . . . . . . . . .  12
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
+     6.1.  BGP Transport Security Considerations . . . . . . . . . .  13
+     6.2.  Auto-discovery Protocol Considerations  . . . . . . . . .  13
+       6.2.1.  Potential Scopes of an Auto-discovery Protocol  . . .  14
+       6.2.2.  Desired Security Properties of the Auto-discovery
 
 
 
@@ -114,11 +114,11 @@ Bush, et al.             Expires August 13, 2021                [Page 2]
 Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
 
 
-               Protocols . . . . . . . . . . . . . . . . . . . . . .  15
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  15
+               Protocols . . . . . . . . . . . . . . . . . . . . . .  14
+   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
 
 1.  Introduction
@@ -516,7 +516,21 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    Unlike LLDP, L3DL has only one implementation, and LSOE has only one
    open source implementation, and neither is significantly deployed.
 
-5.  BGP peer Discovery at Layer Three
+4.2.  Link-Local Discovery
+
+   Some existing BGP auto-configuration mechanisms leverage "point to
+   point" addressing schemes to bootstrap BGP sessions.  One example
+   utilizes an IP subnet numbered such that it may contain only two
+   hosts - for IPv4, a /30 or /31 network; for IPv6 a /127 network.  An
+   additional mechanism may leverage IPv4 ARP [RFC0826] or IPv6 Neighbor
+   Discovery [RFC4861] to learn of hosts on a subnet.
+
+   Such existing mechanisms do not provide an auto-discovery protocol
+   with necessary parameters.  Rather, they simplify configuration by
+   permitting BGP session configuration templates to be easily applied
+   to interfaces without requiring numbering to be known a priori.
+
+4.3.  BGP peer Discovery at Layer Three
 
    Discovery at Layer-3 can assume IP addressability, though the IP
    addresses of potential peers are not known a priori and need to be
@@ -540,10 +554,18 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    3: One is based on extending BGP with new Hello message for peer
    auto-discovery.  One is based on reusing BGP OPEN message format for
    peer auto-discovery.  One is based on bootstrapping BGP sessions via
+
+
+
+Bush, et al.             Expires August 13, 2021               [Page 10]
+
+Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
+
+
    existing BGP sessions.  One is based upon bootstraping a BGP Route
    Reflector via the OSPF protocol.
 
-5.1.  New BGP Hello Message based Approach
+4.3.1.  New BGP Hello Message based Approach
 
    [I-D.xu-idr-neighbor-autodiscovery] describes a BGP neighbor
    discovery mechanism which is based on a newly defined UDP based BGP
@@ -554,14 +576,6 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
 
    o  AS number
    o  BGP Identifier
-
-
-
-Bush, et al.             Expires August 13, 2021               [Page 10]
-
-Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
-
-
    o  Accepted ASN list
    o  Peering address (IPv4 or IPv6)
    o  Local prefix (for loopback)
@@ -574,7 +588,7 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    The mechanism in this draft is perhaps unique among the other
    proposals in requiring bi-directional state.
 
-5.2.  BGP OPEN Message based Approach
+4.3.2.  BGP OPEN Message based Approach
 
    [I-D.raszuk-idr-bgp-auto-session-setup] describes a BGP neighbor
    discovery mechanism by reusing BGP OPEN message format with newly
@@ -597,7 +611,14 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    this mechanism leverages Layer 3 multicast, a PDU fragmentation
    mechanism may need to be described.
 
-5.3.  Bootstrapping BGP via BGP
+
+
+Bush, et al.             Expires August 13, 2021               [Page 11]
+
+Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
+
+
+4.3.3.  Bootstrapping BGP via BGP
 
    [I-D.raszuk-idr-bgp-auto-discovery] describes a new BGP address
    family.  The NLRI carries a Group ID + BGP Identifier as the key.  A
@@ -610,14 +631,6 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    o  Flags to declare a session for information only, to force a reset
       of a session on parameter changes, etc.
 
-
-
-
-Bush, et al.             Expires August 13, 2021               [Page 11]
-
-Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
-
-
    Since the BGP auto-discovery state is carried by BGP, it inherits the
    security implications of the underlying BGP session.
 
@@ -627,7 +640,7 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    Similarly, extensibility considerations would rely on either the new
    BGP Path Attribute, or one yet to be defined.
 
-5.4.  Bootstrapping BGP via OSPF
+4.3.4.  Bootstrapping BGP via OSPF
 
    [I-D.acee-ospf-bgp-rr] describes a mechanism to learn BGP Route
    Reflectors via OSPFv2/OSPFv3 LSAs.  Multiple types of scopes are
@@ -646,11 +659,20 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    This mechanism does not provide for security properties of the BGP
    session or transport properties such as BFD or GTSM.
 
-5.5.  Discovery at Layer Seven
+4.4.  Discovery at Layer Seven
 
    Peer discovery at Layer-7 requires application layer rendezvous
    mechanisms analogous to those used by LISP, [RFC6830] or the Bitcoin
    Protocol.
+
+
+
+
+
+Bush, et al.             Expires August 13, 2021               [Page 12]
+
+Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
+
 
    If the infrastructure is at all complex, for example, multi-segment
    or worse, then it will need prior routing/forwarding knowledge in
@@ -663,45 +685,20 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    On the other hand, those who favor distributed protocols will have
    the classic worries about fragility, redundancy, reliability, etc.
 
-
-
-
-
-
-
-Bush, et al.             Expires August 13, 2021               [Page 12]
-
-Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
-
-
-5.6.  Link-Local Discovery
-
-   Some existing BGP auto-configuration mechanisms leverage "point to
-   point" addressing schemes to bootstrap BGP sessions.  One example
-   utilizes an IP subnet numbered such that it may contain only two
-   hosts - for IPv4, a /30 or /31 network; for IPv6 a /127 network.  An
-   additional mechanism may leverage IPv4 ARP [RFC0826] or IPv6 Neighbor
-   Discovery [RFC4861] to learn of hosts on a subnet.
-
-   Such existing mechanisms do not provide an auto-discovery protocol
-   with necessary parameters.  Rather, they simplify configuration by
-   permitting BGP session configuration templates to be easily applied
-   to interfaces without requiring numbering to be known a priori.
-
-6.  IANA Considerations
+5.  IANA Considerations
 
    This document makes no request of IANA.
 
    Note to RFC Editor: this section may be removed on publication as an
    RFC.
 
-7.  Security Considerations
+6.  Security Considerations
 
    There are two primary components to be secured in environments
    utilizing BGP auto-discovery: The BGP transport layer discovered via
    the protocol, and the auto-discovery protocol itself.
 
-7.1.  BGP Transport Security Considerations
+6.1.  BGP Transport Security Considerations
 
    The purpose of the auto-discovery protocol is to ease the setup of
    BGP sessions for various applications, including data-center fabrics.
@@ -718,10 +715,13 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    All Security Considerations from [RFC4272], BGP Security
    Vulnerabilities Analysis, continue to apply.
 
+6.2.  Auto-discovery Protocol Considerations
 
-
-
-
+   As noted in previous sections, BGP auto-discovery may occur scoped in
+   many portions of the network.  The information present in the auto-
+   discovery protocol is considered sensitive, since it identifies
+   resources running the BGP protocol.  Care should be exercised in
+   avoiding inadvertent disclosure of BGP sessions that are configured
 
 
 
@@ -730,18 +730,11 @@ Bush, et al.             Expires August 13, 2021               [Page 13]
 Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
 
 
-7.2.  Auto-discovery Protocol Considerations
-
-   As noted in previous sections, BGP auto-discovery may occur scoped in
-   many portions of the network.  The information present in the auto-
-   discovery protocol is considered sensitive, since it identifies
-   resources running the BGP protocol.  Care should be exercised in
-   avoiding inadvertent disclosure of BGP sessions that are configured
    to permit auto-configuration even when BGP session transport security
    is in use.  The auto-discovery protocol sets the context for such
    inadvertent disclosure.
 
-7.2.1.  Potential Scopes of an Auto-discovery Protocol
+6.2.1.  Potential Scopes of an Auto-discovery Protocol
 
    A Layer 2 unicast protocol targets a known device, potentially
    discovered through other means.  The targeted device receives the
@@ -776,17 +769,7 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    disclosure.  The auto-discovery protocol will need to address how the
    desired security properties interact with the protocol scope.
 
-
-
-
-
-
-Bush, et al.             Expires August 13, 2021               [Page 14]
-
-Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
-
-
-7.2.2.  Desired Security Properties of the Auto-discovery Protocols
+6.2.2.  Desired Security Properties of the Auto-discovery Protocols
 
    Data Integrity is a required property.  The data that is transmitted
    by a speaker fo the auto-configuration protocol should be able to
@@ -796,6 +779,13 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    Layer 3 implementations.  In a Layer 7 protocol, that protocol may
    provide the necessary authentication.
 
+
+
+Bush, et al.             Expires August 13, 2021               [Page 14]
+
+Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
+
+
    Confidentiality is an optional property.  There is a tension between
    the desire to provide for a simple auto-configuration protocol that
    is easy to diagnose and debug with inadvertent disclosure.
@@ -804,13 +794,13 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    Service, and to causing Denial of Service to discovered BGP session
    end-points.
 
-8.  Acknowledgments
+7.  Acknowledgments
 
    The IDR BGP Auto-Conf Design Team.
 
-9.  References
+8.  References
 
-9.1.  Normative References
+8.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -821,7 +811,7 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-9.2.  Informative References
+8.2.  Informative References
 
    [I-D.acee-idr-lldp-peer-discovery]
               Lindem, A., Patel, K., Zandi, S., Haas, J., and X. Xu,
@@ -835,13 +825,6 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
               Information", draft-acee-ospf-bgp-rr-01 (work in
               progress), September 2017.
 
-
-
-Bush, et al.             Expires August 13, 2021               [Page 15]
-
-Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
-
-
    [I-D.ietf-lsvr-l3dl]
               Bush, R., Austein, R., and K. Patel, "Layer 3 Discovery
               and Liveness", draft-ietf-lsvr-l3dl-07 (work in progress),
@@ -851,6 +834,13 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
               Bush, R. and R. Austein, "Layer 3 Discovery and Liveness
               Signing", draft-ietf-lsvr-l3dl-signing-01 (work in
               progress), January 2021.
+
+
+
+Bush, et al.             Expires August 13, 2021               [Page 15]
+
+Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
+
 
    [I-D.ietf-lsvr-l3dl-ulpc]
               Bush, R. and K. Patel, "L3DL Upper Layer Protocol
@@ -888,16 +878,6 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
               Signature Option", RFC 2385, DOI 10.17487/RFC2385, August
               1998, <https://www.rfc-editor.org/info/rfc2385>.
 
-
-
-
-
-
-Bush, et al.             Expires August 13, 2021               [Page 16]
-
-Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
-
-
    [RFC4272]  Murphy, S., "BGP Security Vulnerabilities Analysis",
               RFC 4272, DOI 10.17487/RFC4272, January 2006,
               <https://www.rfc-editor.org/info/rfc4272>.
@@ -910,6 +890,13 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
               "Neighbor Discovery for IP version 6 (IPv6)", RFC 4861,
               DOI 10.17487/RFC4861, September 2007,
               <https://www.rfc-editor.org/info/rfc4861>.
+
+
+
+Bush, et al.             Expires August 13, 2021               [Page 16]
+
+Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
+
 
    [RFC5082]  Gill, V., Heasley, J., Meyer, D., Savola, P., Ed., and C.
               Pignataro, "The Generalized TTL Security Mechanism
@@ -945,15 +932,6 @@ Authors' Addresses
    Email: jie.dong@huawei.com
 
 
-
-
-
-
-Bush, et al.             Expires August 13, 2021               [Page 17]
-
-Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
-
-
    Jeffrey Haas (editor)
    Juniper Networks
    1133 Innovation Way
@@ -963,6 +941,19 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    Email: jhaas@juniper.net
 
 
+
+
+
+
+
+
+
+
+Bush, et al.             Expires August 13, 2021               [Page 17]
+
+Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
+
+
    Warren Kumari (editor)
    Google
    1600 Amphitheatre Parkway
@@ -970,6 +961,15 @@ Internet-Draft          BGP Peer Auto-Config Reqs          February 2021
    US
 
    Email: warren@kumari.net
+
+
+
+
+
+
+
+
+
 
 
 

@@ -449,131 +449,6 @@
                     significantly deployed.</t>
                 </section>
             </section>
-        </section>
-        <section title="BGP peer Discovery at Layer Three">
-            <t>Discovery at Layer-3 can assume IP addressability, though the IP
-            addresses of potential peers are not known a priori and need to be
-            discovered before further negotiation. IP multicast may be a good
-            choice to address the above concern.</t>
-            <t>The possible problem would appear to discovery at Layer-3 is
-            that one may not know whether to use IPv4 or IPv6.  This might be
-            exacerbated by the possibility of a potential peer not being on the
-            local subnet, and hence broadcast and similar techniques may not be
-            applicable. While in data center network or networks in a single
-            administrative domain, such issue could be easily solved.</t>
-            <t>If one can assume that the BGP session is based on
-            point-to-point link, then discovery might try IPv6 link-local or
-            even IPv4 link- local. A link broadcast or multicast protocol may
-            also be used. For switched or bridged multi-point which is at least
-            on the same subnet, VLAN, etc., multicast or broadcasts might be a
-            viable approach.</t>
-            <t>There are four available candidates for BGP peer discovery at
-            Layer-3: One is based on extending BGP with new Hello message for
-	    peer auto-discovery. One is based on reusing BGP OPEN message format for peer
-	    auto-discovery. One is based on bootstrapping BGP sessions via existing BGP
-	    sessions.  One is based upon bootstraping a BGP Route Reflector via the OSPF
-	    protocol.
-	    </t>
-            <section title="New BGP Hello Message based Approach">
-                <t>
-                <xref target="I-D.xu-idr-neighbor-autodiscovery" /> describes a
-                BGP neighbor discovery mechanism which is based on a newly
-                defined UDP based BGP Hello message. The BGP Hello message is
-                sent in multicast to discover the directly connected BGP peers.
-                According to the message header format and the TLVs carried in
-                the message, the information which can be signaled is:
-                <list style="symbols">
-                    <t>AS number</t>
-                    <t>BGP Identifier</t>
-                    <t>Accepted ASN list</t>
-                    <t>Peering address (IPv4 or IPv6)</t>
-                    <t>Local prefix (for loopback)</t>
-                    <t>Link attributes</t>
-                    <t>Neighbor state</t>
-                    <t>BGP Authentication</t>
-                </list>
-                </t>
-		<t>The mechanisms in this draft do not currently handle fragmentation.</t>
-		<t>The mechanism in this draft is perhaps unique among the other proposals
-		in requiring bi-directional state.</t>
-            </section>
-            <section title="BGP OPEN Message based Approach">
-                <t>
-                <xref target="I-D.raszuk-idr-bgp-auto-session-setup" /> describes
-                a BGP neighbor discovery mechanism by reusing BGP OPEN message
-                format with newly defined UDP port. The message is called BGP
-                Session Explorer (BSE) packet and is sent in multicast. Since
-                the message format is the same as BGP OPEN, the information
-                which can be signaled is:
-                <list style="symbols">
-                    <t>AS number</t>
-                    <t>BGP Identifier</t>
-                    <t>Peering address</t>
-                </list></t>
-		<t>The mechanism is currently under-specified with respect to a number of
-		similar properties described elsewhere.  A general implication is that
-		those properties - and others providing for extensibility of the
-		auto-discovery mechanism - would need to be added to the BGP OPEN message
-		and deal with the related impacts on the BGP session's finite-state
-		machine.</t>
-		<t>BGP PDUs, including the OPEN message, may be up to 4k in size.  Since
-		this mechanism leverages Layer 3 multicast, a PDU fragmentation mechanism
-		may need to be described.</t>
-            </section>
-	    <section title="Bootstrapping BGP via BGP">
-		<t>
-		<!-- XXX JMH - draft raszuk auto-discovery covered by patent -->
-		<xref target="I-D.raszuk-idr-bgp-auto-discovery"/> describes a
-		new BGP address family.  The NLRI carries a Group ID + BGP
-		Identifier as the key.  A new BGP Path Attribute carries
-		information about the sessions:
-		<list style="symbols">
-		    <t>AS Number</t>
-		    <t>AFI/SAFI</t>
-		    <t>BGP Identifier</t>
-		    <t>Peer Transport Address</t>
-		    <t>Flags to declare a session for information only, to force
-		    a reset of a session on parameter changes, etc.</t>
-		</list>
-		</t>
-		<t>Since the BGP auto-discovery state is carried by BGP, it inherits the
-		security implications of the underlying BGP session.</t>
-		<t>PDU size considerations are identical to those of a BGP UPDATE
-		message.</t>
-		<t>Similarly, extensibility considerations would rely on either the new
-		BGP Path Attribute, or one yet to be defined.</t>
-	    </section>
-	    <section title="Bootstrapping BGP via OSPF">
-	        <t><xref target="I-D.acee-ospf-bgp-rr"/> describes a mechanism to learn BGP
-		Route Reflectors via OSPFv2/OSPFv3 LSAs.  Multiple types of scopes are
-		defined for these LSAs to help constrain where they are advertised in an
-		OSPF domain.</t>
-		<t>The BGP Route Reflector TLV contains:
-		<list style="symbols">
-		    <t>Local AS Number</t>
-		    <t>IPv4 or IPv6 Address of the Route Reflector</t>
-		    <t>A list of AFI/SAFIs supported by the Route Reflector</t>
-		</list>
-		</t>
-		<t>The BGP Route Reflector TLV may be advertised more than once,
-		potentially to describe different IP transport endpoints.</t>
-		<t>This mechanism does not provide for security properties of the BGP
-		session or transport properties such as BFD or GTSM.</t>
-	    </section>
-            <section title="Discovery at Layer Seven">
-                <t>Peer discovery at Layer-7 requires application layer
-                rendezvous mechanisms analogous to those used by LISP,
-                <xref target="RFC6830" /> or the Bitcoin Protocol.</t>
-                <t>If the infrastructure is at all complex, for example, multi-segment
-                or worse, then it will need prior routing/forwarding knowledge
-                in order to reach the rendezvous. In a BGP centric deployment
-                this could pose a chicken and egg problem.</t>
-                <t>Rendezvous approaches may appeal to deployments which favor
-                a central control framework.</t>
-                <t>On the other hand, those who favor distributed protocols
-                will have the classic worries about fragility, redundancy,
-                reliability, etc.</t>
-            </section>
 	    <section title="Link-Local Discovery">
 		<t>Some existing BGP auto-configuration mechanisms leverage "point to
 		point" addressing schemes to bootstrap BGP sessions.  One example utilizes
@@ -587,7 +462,132 @@
 		BGP session configuration templates to be easily applied to interfaces
 		without requiring numbering to be known a priori.</t>
 	    </section>
-        </section>
+	    <section title="BGP peer Discovery at Layer Three">
+		<t>Discovery at Layer-3 can assume IP addressability, though the IP
+		addresses of potential peers are not known a priori and need to be
+		discovered before further negotiation. IP multicast may be a good
+		choice to address the above concern.</t>
+		<t>The possible problem would appear to discovery at Layer-3 is
+		that one may not know whether to use IPv4 or IPv6.  This might be
+		exacerbated by the possibility of a potential peer not being on the
+		local subnet, and hence broadcast and similar techniques may not be
+		applicable. While in data center network or networks in a single
+		administrative domain, such issue could be easily solved.</t>
+		<t>If one can assume that the BGP session is based on
+		point-to-point link, then discovery might try IPv6 link-local or
+		even IPv4 link- local. A link broadcast or multicast protocol may
+		also be used. For switched or bridged multi-point which is at least
+		on the same subnet, VLAN, etc., multicast or broadcasts might be a
+		viable approach.</t>
+		<t>There are four available candidates for BGP peer discovery at
+		Layer-3: One is based on extending BGP with new Hello message for
+		peer auto-discovery. One is based on reusing BGP OPEN message format for peer
+		auto-discovery. One is based on bootstrapping BGP sessions via existing BGP
+		sessions.  One is based upon bootstraping a BGP Route Reflector via the OSPF
+		protocol.
+		</t>
+		<section title="New BGP Hello Message based Approach">
+		    <t>
+		    <xref target="I-D.xu-idr-neighbor-autodiscovery" /> describes a
+		    BGP neighbor discovery mechanism which is based on a newly
+		    defined UDP based BGP Hello message. The BGP Hello message is
+		    sent in multicast to discover the directly connected BGP peers.
+		    According to the message header format and the TLVs carried in
+		    the message, the information which can be signaled is:
+		    <list style="symbols">
+			<t>AS number</t>
+			<t>BGP Identifier</t>
+			<t>Accepted ASN list</t>
+			<t>Peering address (IPv4 or IPv6)</t>
+			<t>Local prefix (for loopback)</t>
+			<t>Link attributes</t>
+			<t>Neighbor state</t>
+			<t>BGP Authentication</t>
+		    </list>
+		    </t>
+		    <t>The mechanisms in this draft do not currently handle fragmentation.</t>
+		    <t>The mechanism in this draft is perhaps unique among the other proposals
+		    in requiring bi-directional state.</t>
+		</section>
+		<section title="BGP OPEN Message based Approach">
+		    <t>
+		    <xref target="I-D.raszuk-idr-bgp-auto-session-setup" /> describes
+		    a BGP neighbor discovery mechanism by reusing BGP OPEN message
+		    format with newly defined UDP port. The message is called BGP
+		    Session Explorer (BSE) packet and is sent in multicast. Since
+		    the message format is the same as BGP OPEN, the information
+		    which can be signaled is:
+		    <list style="symbols">
+			<t>AS number</t>
+			<t>BGP Identifier</t>
+			<t>Peering address</t>
+		    </list></t>
+		    <t>The mechanism is currently under-specified with respect to a number of
+		    similar properties described elsewhere.  A general implication is that
+		    those properties - and others providing for extensibility of the
+		    auto-discovery mechanism - would need to be added to the BGP OPEN message
+		    and deal with the related impacts on the BGP session's finite-state
+		    machine.</t>
+		    <t>BGP PDUs, including the OPEN message, may be up to 4k in size.  Since
+		    this mechanism leverages Layer 3 multicast, a PDU fragmentation mechanism
+		    may need to be described.</t>
+		</section>
+		<section title="Bootstrapping BGP via BGP">
+		    <t>
+		    <!-- XXX JMH - draft raszuk auto-discovery covered by patent -->
+		    <xref target="I-D.raszuk-idr-bgp-auto-discovery"/> describes a
+		    new BGP address family.  The NLRI carries a Group ID + BGP
+		    Identifier as the key.  A new BGP Path Attribute carries
+		    information about the sessions:
+		    <list style="symbols">
+			<t>AS Number</t>
+			<t>AFI/SAFI</t>
+			<t>BGP Identifier</t>
+			<t>Peer Transport Address</t>
+			<t>Flags to declare a session for information only, to force
+			a reset of a session on parameter changes, etc.</t>
+		    </list>
+		    </t>
+		    <t>Since the BGP auto-discovery state is carried by BGP, it inherits the
+		    security implications of the underlying BGP session.</t>
+		    <t>PDU size considerations are identical to those of a BGP UPDATE
+		    message.</t>
+		    <t>Similarly, extensibility considerations would rely on either the new
+		    BGP Path Attribute, or one yet to be defined.</t>
+		</section>
+		<section title="Bootstrapping BGP via OSPF">
+		    <t><xref target="I-D.acee-ospf-bgp-rr"/> describes a mechanism to learn BGP
+		    Route Reflectors via OSPFv2/OSPFv3 LSAs.  Multiple types of scopes are
+		    defined for these LSAs to help constrain where they are advertised in an
+		    OSPF domain.</t>
+		    <t>The BGP Route Reflector TLV contains:
+		    <list style="symbols">
+			<t>Local AS Number</t>
+			<t>IPv4 or IPv6 Address of the Route Reflector</t>
+			<t>A list of AFI/SAFIs supported by the Route Reflector</t>
+		    </list>
+		    </t>
+		    <t>The BGP Route Reflector TLV may be advertised more than once,
+		    potentially to describe different IP transport endpoints.</t>
+		    <t>This mechanism does not provide for security properties of the BGP
+		    session or transport properties such as BFD or GTSM.</t>
+		</section>
+	    </section>
+	    <section title="Discovery at Layer Seven">
+		<t>Peer discovery at Layer-7 requires application layer
+		rendezvous mechanisms analogous to those used by LISP,
+		<xref target="RFC6830" /> or the Bitcoin Protocol.</t>
+		<t>If the infrastructure is at all complex, for example, multi-segment
+		or worse, then it will need prior routing/forwarding knowledge
+		in order to reach the rendezvous. In a BGP centric deployment
+		this could pose a chicken and egg problem.</t>
+		<t>Rendezvous approaches may appeal to deployments which favor
+		a central control framework.</t>
+		<t>On the other hand, those who favor distributed protocols
+		will have the classic worries about fragility, redundancy,
+		reliability, etc.</t>
+	    </section>
+	</section>
         <section title="IANA Considerations">
             <t>This document makes no request of IANA.</t>
             <t>Note to RFC Editor: this section may be removed on publication
