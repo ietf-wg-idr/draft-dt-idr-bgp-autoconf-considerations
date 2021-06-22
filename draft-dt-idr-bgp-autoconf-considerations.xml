@@ -20,6 +20,7 @@
 <!ENTITY RASZUK-AUTODISCOVERY SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.raszuk-idr-bgp-auto-discovery.xml">
 <!ENTITY XU-AUTODISCOVERY SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.xu-idr-neighbor-autodiscovery.xml">
 <!ENTITY LSOE SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-lsoe.xml">
+<!ENTITY BFD-STRICT SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-bgp-bfd-strict-mode.xml">
 <!ENTITY L3DL-SIGNING SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lsvr-l3dl-signing.xml">
 ]>
 <?rfc comments="yes"?>
@@ -32,7 +33,7 @@
 <?rfc tocdepth="3"?>
 <?rfc tocindent="yes"?>
 <?rfc tocompact="yes"?>
-<rfc category="info" docName="draft-ietf-idr-bgp-autoconf-considerations-00" ipr="trust200902">
+<rfc category="info" docName="draft-ietf-idr-bgp-autoconf-considerations-01" ipr="trust200902">
     <front>
         <title abbrev="BGP Peer Auto-Config Reqs">Requirements and Considerations in BGP Peer Auto-Configuration</title>
         <author fullname="Randy Bush" initials="R." surname="Bush">
@@ -86,7 +87,7 @@
                 <email>warren@kumari.net</email>
             </address>
         </author>
-        <date day="8" month="March" year="2021" />
+        <date day="25" month="June" year="2021" />
         <abstract>
             <t>This draft is an exploration of the requirements, the
             alternatives, and trade-offs in BGP peer auto-discovery at various
@@ -126,32 +127,32 @@
 		exchanged by the BGP FSM, including its OPEN message.</t>
             </section>
             <section title="BGP Auto-Discovery Protocol State Requirements">
-		<t>Tersely, the required state that MUST be carried by the BGP
-		Auto-Discovery Protocol for a discovered session include:</t>
+		<t>The Auto-Discovery Protocol is used discover BGP Session
+		end-points.  In other words, enough information to for a BGP
+		Speaker to initiate a connection in the BGP protocol.</t>
 
-		<t>BGP Session Transport State:
+		<t>The BGP Session Properties, used by the discovering client to
+		determine acceptability of the discovered session, are
+		"discovered at OPEN" by the client by initiating a BGP session
+		with the discovered end-point.</t>
+
+		<t>The required state that MUST be carried by the BGP
+		Auto-Discovery Protocol for a discovered session includes:
 		<list style="symbols">
 		    <t>IP addresses</t>
 		    <t>Transport security parameters</t>
 		    <t><xref target="RFC5082">GTSM</xref> configuration, if any</t>
-		    <t><xref target="RFC5880">BFD</xref> configuration, if any</t>
+		    <t>BGP Session Protocol State Version Number</t>
 		</list></t>
 
-		<t>BGP Session Protocol State:
+		<t>BGP Session Protocol State, discovered at BGP OPEN:
 		<list style="symbols">
 		    <t>AS Numbers</t>
 		    <t>BGP Identifier</t>
 		    <t>Supported AFI/SAFIs</t>
-		    <t>Device Role</t>
 		</list></t>
 
-		<t>Once this information has been learned, discovery has been
-		completed. The BGP Speaker has the necessary information to
-		determine if it wishes to open a BGP session with the discovered
-		BGP Speaker.  It can then then initiate a BGP session with the
-		discovered BGP Speaker.</t>
-
-            <section title="BGP Session Transport State">
+            <section title="BGP Auto-Discovery Protocol State">
                 <t><list style="symbols">
 		    <t>Support for IPv4 and IPv6 address families, but do
 		    not assume that both are available.</t>
@@ -161,14 +162,19 @@
 		    information to bootstrap forwarding to that address.</t>
 		    <t>Discovery of BGP transport protocol end-points and
 		    essential properties such as IP addresses, transport security
-		    parameters, layer 3 liveness mechanisms such as
-		    BFD, and support for GTSM.</t>
+		    parameters, and support for GTSM.</t>
 		    <!-- XXX JMH What about ports? -->
 		    <t>Transport security parameters include protocol - such as plain TCP,
 		    <xref target="RFC5925">TCP-AO</xref>, <xref target="RFC4301">IPsec</xref>, 
 		    <xref target="RFC2385">TCP-MD5</xref> - and necessary configuration for that
 		    protocol.  Some example considerations for this are represented in 
 		    <xref target="RFC8177">YANG Data Model for Key Chains</xref>.</t>
+		    <t>A version number representing when the BGP Session Protocol State
+		    has last changed.  This can be used as a hint by an auto-discovery
+		    client to determine when the state has been updated from a prior
+		    version. This can reduce repeated connections from an auto-discovery
+		    client to the discovered BGP Speaker when information has not
+		    changed.</t>
 		</list></t>
 	    </section>
             <section title="BGP Session Protocol State">
@@ -176,27 +182,11 @@
 		    <t>Discovery of BGP peer session parameters relevant to
 		    peer selection such as Autonomous System (AS) Numbers,
 		    BGP Identifiers, supported address
-		    families/subsequent-address families (AFI/SAFIs), and
-		    device roles.</t>
+		    families/subsequent-address families (AFI/SAFIs).</t>
 		</list></t>
 
-		<section title="BGP Auto-Discovery Device Role Requirements">
-		    <t>As part of peer selection, it may be necessary to understand the
-		    role of the discovered session to determine whether or not the BGP
-		    Speaker desires to establish a peering session.</t>
-		    <t>In some cases, role may be a clear function of the device in a
-		    deployment.  An example of this is a discovered session for a BGP
-		    Clos fabric: The interface may for a leaf, the aggregation layer, or
-		    the spine layer.  Even then, the type of fabric, what pod it belongs
-		    to and the peer type may be relevant information.</t>
-		    <t>Some types of device roles may be subject to standardization,
-		    such as BGP Clos fabrics.  Flexibility to permit operators to use
-		    device roles for their own auto-configuration peer selection purposes
-		    is a requirement.</t>
-		    <t>Peering sessions may need to advertise that they are capable to be used
-		    for multiple roles.  Thus, it is a requirement that the auto-discovery
-		    protocols permit advertising multiple roles in the same PDU.</t>
-		</section>
+		<!-- XXX JMH - add section about extensions to be added in
+		capabilities. -->
 	    </section>
         </section>
 	<section title="BGP Auto-Discovery Protocol Transport Requirements">
@@ -216,11 +206,7 @@
             the following:
             <list style="symbols">
                 <t>Select or otherwise filter which peers to actually try to
-                send BGP OPEN messages.
-                <list style="symbols">
-		    <t>Permit the matching of device role from the discovery protocol
-		    as part of peer selection.</t>
-                </list></t>
+                send BGP OPEN messages.</t>
                 <t>Decide the parameters to use.  For example:
                 <list style="symbols">
                     <t>IP addressing: IPv4 or IPv6.</t>
@@ -236,8 +222,8 @@
             <t>In addition to actually forming the BGP sessions, a common
             deployment model may also be the so called "validation" model. In this
             model, the operator configures the BGP sessions manually, and uses
-            the information collected/populated by the BGP Autoconf mechanism
-            to validate that the sessions are correct.</t>
+	    the information collected/populated by the BGP Auto-Configuration
+	    mechanism to validate that the sessions are correct.</t>
             </section>
         </section>
         <section title="Design Principle Considerations">
@@ -270,10 +256,11 @@
 		session establishment attempted.  For protocols crafted explicitly for BGP
 		auto-configuration, the time for discovery should be a reasonable
 		amount of time; for example ten seconds or less.</t>
+		<!-- XXX JMH - Get consensus on this recommended value. -->
 		<t>Since discovery mechanisms may become very chatty when utilized by
 		a number of devices on shared networks, the protocol should not
 		impose undue burden on the devices on that network to process the
-		discovery messages.  New auto-discovery protcols MUST NOT transmit
+		discovery messages.  New auto-discovery protocols MUST NOT transmit
 		messages more than once a second.</t>
 		<t>When an auto-discovery mechanism is used for a point-to-point
 		link, or with the expectation of establishing a BGP session with a
@@ -319,6 +306,15 @@
 		interactions with their protocol state machinery for each mechanism.</t>
 	    </section>
 
+	    <section title="Session Stability Considerations">
+		<t><xref target="RFC5880">BFD</xref> is often used to provide fast failure 
+		detection for the BGP protocol.  To provide for maximum compatibility and
+		ease of use for auto-discovered sessions, 
+		<xref target="I-D.ietf-idr-bgp-bfd-strict-mode"/>
+		SHOULD be used to provide consistent BFD protection for an auto-discovered
+		BGP session.</t>
+	    </section>
+
 	    <section title="Operational Trust Considerations">
 		<t>Different deployment models will have different trust models and
 		requirements. Some of this will be driven by the size, complexity and
@@ -360,7 +356,7 @@
 		<t>Closely related to these considerations is the "scope" of the
 		discovery process. It is expected that many operators will wish to
 		only perform discovery on "infrastructure" or "fabric" interfaces, and
-		not interfaces which face customers.</t>
+		not interfaces to customers.</t>
 
 		<t>It is not clear that the solution that chosen will be able to
 		meet all of the trust and deployment models, and we will need to
@@ -528,6 +524,7 @@
 	    &LLDP;
 	    &L3DL;
 	    &AUTO-SESSION;
+	    &BFD-STRICT;
 	    &RASZUK-AUTODISCOVERY;
 	    &XU-AUTODISCOVERY;
 	    &L3DL-SIGNING;
@@ -648,7 +645,7 @@
 		administrative domain, such issue could be easily solved.</t>
 		<t>If one can assume that the BGP session is based on
 		point-to-point link, then discovery might try IPv6 link-local or
-		even IPv4 link- local. A link broadcast or multicast protocol may
+		even IPv4 link-local. A link broadcast or multicast protocol may
 		also be used. For switched or bridged multi-point which is at least
 		on the same subnet, VLAN, etc., multicast or broadcasts might be a
 		viable approach.</t>
